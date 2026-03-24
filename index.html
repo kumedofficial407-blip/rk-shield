@@ -3,73 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK-SHIELD | ELITE SECURITY v7.5</title>
+    <title>RK-SHIELD | FINAL RECON v8.0</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
-        :root { --neon: #00ff41; --bg: #000; --danger: #ff003c; }
+        :root { --neon: #00ff41; --bg: #000; --danger: #ff003c; --blue: #00d4ff; }
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
         body { background: var(--bg); color: white; font-family: 'Fira Code', monospace; overflow-x: hidden; }
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
-        header { padding: 40px; text-align: center; border-bottom: 2px solid var(--neon); background: rgba(0, 0, 0, 0.8); box-shadow: 0 0 30px var(--neon); }
-        .glitch { font-size: 3rem; font-weight: bold; color: var(--neon); position: relative; animation: flicker 2s infinite; }
-        main { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 30px; max-width: 1400px; margin: auto; }
-        .panel { background: rgba(15, 15, 15, 0.95); border: 1px solid var(--neon); padding: 25px; border-radius: 10px; position: relative; }
-        .panel h2 { color: var(--neon); font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        #terminal-logs { height: 180px; overflow-y: auto; font-size: 0.8rem; color: #00ff00; }
-        .counter { font-size: 2rem; color: var(--danger); text-align: center; }
-        .btn-action { width: 100%; padding: 15px; background: none; border: 1px solid var(--neon); color: var(--neon); font-family: 'Fira Code'; margin-top: 10px; font-weight: bold; }
-        .btn-action:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
-        #welcome-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; text-align: center; }
-        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.12; }
+        
+        /* এন্ট্রি স্ক্রিন */
+        #welcome-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #0a0a0a 0%, #000 100%); z-index: 1000; display: flex; align-items: center; justify-content: center; text-align: center; border: 5px solid var(--neon); box-sizing: border-box; }
+        .pulse-text { color: var(--neon); font-size: 1.5rem; animation: pulse 1.5s infinite; letter-spacing: 3px; }
+
+        header { padding: 30px; text-align: center; border-bottom: 2px solid var(--neon); background: rgba(0,0,0,0.9); box-shadow: 0 0 20px var(--neon); }
+        .glitch-title { font-size: 2.5rem; color: var(--neon); text-shadow: 2px 2px var(--danger); animation: flicker 3s infinite; }
+
+        main { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; padding: 25px; max-width: 1500px; margin: auto; }
+        .panel { background: rgba(10, 10, 10, 0.9); border: 1px solid var(--neon); padding: 20px; border-radius: 8px; position: relative; box-shadow: 0 0 10px rgba(0,255,65,0.1); }
+        .panel h2 { color: var(--neon); font-size: 1rem; margin-bottom: 15px; text-transform: uppercase; border-left: 3px solid var(--neon); padding-left: 10px; }
+
+        /* রেজাল্ট ডিসপ্লে সেকশন */
+        #result-display { background: #050505; border: 1px solid var(--blue); padding: 15px; height: 200px; overflow-y: auto; font-size: 0.85rem; color: var(--blue); border-radius: 5px; }
+        .res-line { margin-bottom: 5px; border-bottom: 1px solid rgba(0, 212, 255, 0.1); padding-bottom: 2px; }
+
+        /* প্রগ্রেস বার */
+        .progress-container { width: 100%; background: #222; height: 10px; margin-top: 10px; border-radius: 5px; overflow: hidden; display: none; }
+        .progress-bar { height: 100%; background: var(--neon); width: 0%; transition: width 0.1s; }
+
+        .btn-scan { width: 100%; padding: 12px; background: none; border: 1px solid var(--neon); color: var(--neon); font-family: 'Fira Code'; font-weight: bold; margin-top: 15px; transition: 0.3s; }
+        .btn-scan:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
+        @keyframes flicker { 0% { opacity: 1; } 10% { opacity: 0.8; } 20% { opacity: 1; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div id="welcome-overlay" onclick="startEngine()">
+    <div id="welcome-overlay" onclick="bootSystem()">
         <div>
-            <h1 style="color:var(--neon); margin-bottom: 20px;">[ ACCESS GRANTED ]</h1>
-            <p style="color:#fff; font-size: 1.2rem;">TAP ANYWHERE TO ENTER RK-SHIELD</p>
+            <h2 class="pulse-text">[ INITIALIZING RK-SHIELD ]</h2>
+            <p style="margin-top: 20px; color: #555;">SECURITY CLEARANCE REQUIRED<br>TAP TO AUTHENTICATE</p>
         </div>
     </div>
 
     <canvas id="bg-canvas"></canvas>
 
     <header>
-        <div class="glitch">RK-SHIELD v7.5</div>
-        <p>> SYSTEM: <span id="sys-status" style="color:var(--neon);">SECURED</span> | RECONNAISSANCE MODE</p>
+        <h1 class="glitch-title">RK-SHIELD RECON v8.0</h1>
+        <p style="font-size: 0.8rem; opacity: 0.7;">CONNECTED TO: <span style="color:var(--neon)">kumedofficial.online</span></p>
     </header>
 
     <main>
         <section class="panel">
-            <h2>Visitor Identification</h2>
-            <p>IP: <span id="ip" style="color:var(--neon)">Scanning...</span></p>
-            <p>LOC: <span id="loc">Wait...</span></p>
-            <p>ISP: <span id="isp">Wait...</span></p>
-            <div id="radar" style="width:100px; height:100px; border:1px solid var(--neon); border-radius:50%; margin: 15px auto; border-top-color: transparent; animation: spin 2s linear infinite;"></div>
+            <h2>Visitor Recon</h2>
+            <p>IP: <span id="ip" style="color:var(--neon)">...</span></p>
+            <p>CITY: <span id="city">...</span></p>
+            <p>ISP: <span id="isp">...</span></p>
+            <div style="margin-top: 15px; font-size: 0.7rem; color: var(--danger);">[ STATUS: MONITORING LIVE TRAFFIC ]</div>
+        </section>
+
+        <section class="panel" style="grid-column: span 1;">
+            <h2>Target Analysis Results</h2>
+            <div id="result-display">
+                <div class="res-line">> Awaiting Target Data...</div>
+            </div>
+            <div class="progress-container" id="p-cont"><div class="progress-bar" id="p-bar"></div></div>
+            <button class="btn-scan" onclick="runAnalysis()">START DEEP ANALYSIS</button>
         </section>
 
         <section class="panel">
-            <h2>Core Command logs</h2>
-            <div id="terminal-logs"></div>
-        </section>
-
-        <section class="panel">
-            <h2>Active Threats</h2>
-            <div class="counter" id="v-count">104</div>
-            <p style="text-align:center; font-size:0.7rem; opacity:0.7;">Malicious Packets Detected</p>
-            <button class="btn-action" onclick="deepScan()">RUN DEEP ANALYSIS</button>
+            <h2>Core Execution Logs</h2>
+            <div id="logs" style="font-size: 0.8rem; height: 180px; overflow: hidden; color: #00ff00;"></div>
         </section>
     </main>
 
-    <footer style="text-align:center; padding:20px; border-top: 1px solid var(--neon);">
-        <p>© 2026 kumedofficial.online | ENCRYPTED BY RK-ULTRA V5.0</p>
-    </footer>
-
     <script>
-        // আইপি ও লোকেশন ডাটা
+        // আইপি ডাটা
         fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
             document.getElementById('ip').innerText = data.ip;
-            document.getElementById('loc').innerText = data.city + ", " + data.country_name;
+            document.getElementById('city').innerText = data.city;
             document.getElementById('isp').innerText = data.org;
         });
 
@@ -88,34 +100,61 @@
         }
         setInterval(draw, 50);
 
-        // লগস এনিমেশন
-        const logsBox = document.getElementById('terminal-logs');
-        const phrases = ["> Bypassing Firewall...", "> Accessing Database...", "> Packet Sniffing...", "> Payload Injected.", "> Encryption Keys Found.", "> RK-ULTRA V5.0 ACTIVE."];
+        // সিস্টেম বুট এবং ভয়েস
+        function bootSystem() {
+            document.getElementById('welcome-overlay').style.display = 'none';
+            const msg = new SpeechSynthesisUtterance("Welcome RK. System initialized. Secure connection established on kumedofficial dot online.");
+            msg.rate = 0.9; window.speechSynthesis.speak(msg);
+        }
+
+        // এনালাইসিস সিমুলেশন
+        function runAnalysis() {
+            const display = document.getElementById('result-display');
+            const pCont = document.getElementById('p-cont');
+            const pBar = document.getElementById('p-bar');
+            
+            display.innerHTML = "";
+            pCont.style.display = "block";
+            let width = 0;
+            
+            const results = [
+                "> Scanning Sub-domains...",
+                "> Found: dev.target.com [IP: 192.168.1.1]",
+                "> Found: api.target.com [SECURE]",
+                "> Analyzing SSL Certificates...",
+                "> Vulnerability Detected: CVE-2026-X",
+                "> Fetching Data Breach Records...",
+                "> Status: 105 Matches Found in DB.",
+                "> REPORT GENERATED SUCCESSFULLY."
+            ];
+
+            let id = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(id);
+                    let i = 0;
+                    let resId = setInterval(() => {
+                        if(i < results.length) {
+                            display.innerHTML += `<div class="res-line">${results[i]}</div>`;
+                            display.scrollTop = display.scrollHeight;
+                            i++;
+                        } else { clearInterval(resId); }
+                    }, 800);
+                } else {
+                    width++;
+                    pBar.style.width = width + '%';
+                }
+            }, 30);
+        }
+
+        // লগস
+        const logsBox = document.getElementById('logs');
+        const phrases = ["> Bypass Check...", "> Port 8080: Open", "> Sniffing Packets...", "> RK-ULTRA V5.0 Active", "> Remote Access Ready."];
         setInterval(() => {
             let p = document.createElement('p');
             p.innerText = phrases[Math.floor(Math.random()*phrases.length)];
             logsBox.appendChild(p);
             if(logsBox.children.length > 8) logsBox.removeChild(logsBox.firstChild);
-            logsBox.scrollTop = logsBox.scrollHeight;
-        }, 1200);
-
-        // মেইন ফাংশন (ভয়েস ও এন্ট্রি)
-        function startEngine() {
-            document.getElementById('welcome-overlay').style.display = 'none';
-            const msg = new SpeechSynthesisUtterance("System Access Granted. Welcome to RK Shield Security Engine. All systems are operational.");
-            msg.rate = 0.9; msg.pitch = 0.8;
-            window.speechSynthesis.speak(msg);
-        }
-
-        function deepScan() {
-            alert("Deep Analysis Initiated. Tracking target packets...");
-        }
-
-        setInterval(() => {
-            document.getElementById('v-count').innerText = Math.floor(Math.random() * (500 - 100) + 100);
-        }, 2000);
+        }, 1500);
     </script>
-    <style> @keyframes spin { to { transform: rotate(360deg); } } </style>
-</b
-    ody>
+</body>
 </html>
