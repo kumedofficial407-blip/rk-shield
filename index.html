@@ -3,177 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK-SHIELD | CUSTOMER MAGNET v15.0</title>
+    <title>RK-SHIELD | THE INTERSTELLAR v16.0</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
-        :root { --neon: #00ff41; --bg: #000; --danger: #ff003c; --gold: #ffd700; }
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
-        body { background: var(--bg); color: white; font-family: 'Fira Code', monospace; overflow-x: hidden; }
-        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.1; }
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
+        :root { --neon: #00ff41; --danger: #ff003c; --blue: #00d4ff; --gold: #ffd700; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('https://cur.cursors-4u.net/symbols/sym-1/sym46.cur'), auto; }
+        body { background: #000; color: white; font-family: 'Fira Code', monospace; overflow-x: hidden; }
+        
+        /* ম্যাট্রিক্স ব্যাকগ্রাউন্ড */
+        #matrix-bg { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; }
 
-        /* এন্ট্রি স্ক্রিন */
-        #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; border: 2px solid var(--neon); }
-        .auth-btn { padding: 20px 40px; border: 2px solid var(--neon); color: var(--neon); font-size: 1.5rem; background: transparent; cursor: pointer; box-shadow: 0 0 20px var(--neon); text-transform: uppercase; animation: pulse 1.5s infinite; }
+        /* আলটিমেট হেডার */
+        header { padding: 50px; text-align: center; background: radial-gradient(circle, #0a0a0a 0%, #000 100%); border-bottom: 3px double var(--neon); box-shadow: 0 0 50px rgba(0, 255, 65, 0.4); }
+        .glitch-main { font-size: 4rem; font-weight: 900; color: var(--neon); text-transform: uppercase; letter-spacing: 10px; animation: glow 2s infinite alternate; }
+        
+        /* ডার্ক ওয়েব লাইভ ফিড */
+        .dark-feed { background: #0a0000; color: var(--danger); padding: 8px; font-size: 0.7rem; border-bottom: 1px solid var(--danger); }
 
-        header { padding: 40px; text-align: center; border-bottom: 2px solid var(--neon); background: rgba(0,0,0,0.9); }
-        .glitch-title { font-size: 3rem; color: var(--neon); text-shadow: 2px 2px var(--danger); letter-spacing: 5px; }
+        main { padding: 40px; max-width: 1600px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
+        .panel { background: rgba(5, 5, 5, 0.9); border: 1px solid #1a1a1a; padding: 30px; border-radius: 20px; transition: 0.5s; position: relative; overflow: hidden; }
+        .panel:hover { border-color: var(--neon); transform: perspective(1000px) rotateX(5deg); box-shadow: 0 20px 50px rgba(0, 255, 65, 0.3); }
 
-        /* অফার টাইমার */
-        .promo-bar { background: var(--danger); color: white; padding: 10px; text-align: center; font-weight: bold; font-size: 0.9rem; }
+        /* এআই প্রেডিকটর */
+        .ai-box { background: #000; border: 2px solid var(--blue); padding: 20px; border-radius: 10px; text-align: center; }
+        .percentage { font-size: 3rem; color: var(--blue); font-weight: bold; text-shadow: 0 0 20px var(--blue); }
 
-        main { padding: 30px; max-width: 1400px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
-        .panel { background: rgba(10,10,10,0.95); border: 1px solid #333; padding: 25px; border-radius: 15px; transition: 0.4s; position: relative; }
-        .panel:hover { border-color: var(--neon); box-shadow: 0 0 25px rgba(0,255,65,0.2); transform: translateY(-5px); }
-        .panel h2 { color: var(--neon); margin-bottom: 20px; font-size: 1.2rem; border-left: 4px solid var(--neon); padding-left: 10px; }
+        /* স্যাটেলাইট ম্যাপ */
+        #map-sim { height: 250px; background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/World_map_-_low_resolution.svg/1200px-World_map_-_low_resolution.svg.png'); background-size: cover; opacity: 0.3; position: relative; }
+        .pulse-point { position: absolute; width: 10px; height: 10px; background: red; border-radius: 50%; animation: pulse 1s infinite; }
 
-        /* সার্ভিস কার্ডস */
-        .service-item { background: #050505; border: 1px solid #222; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
-        .service-item h3 { color: var(--gold); margin-bottom: 10px; }
-        .btn-hire { width: 100%; padding: 12px; background: var(--neon); color: #000; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; text-transform: uppercase; }
+        /* সার্ভিস বাটন */
+        .btn-interstellar { width: 100%; padding: 20px; background: transparent; border: 2px solid var(--neon); color: var(--neon); font-size: 1.2rem; font-weight: bold; text-transform: uppercase; margin-top: 20px; transition: 0.3s; position: relative; overflow: hidden; }
+        .btn-interstellar:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
 
-        /* চ্যাট উইজেট */
-        #chat-widget { position: fixed; bottom: 20px; right: 20px; width: 320px; height: 450px; background: #000; border: 2px solid var(--neon); border-radius: 10px; display: none; flex-direction: column; z-index: 999; box-shadow: 0 0 30px var(--neon); }
-        .chat-header { background: var(--neon); color: #000; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; }
-        .chat-body { flex: 1; padding: 15px; overflow-y: auto; font-size: 0.85rem; color: #0f0; }
-        .chat-input { padding: 10px; border-top: 1px solid #333; display: flex; }
-        .chat-input input { flex: 1; background: #000; border: 1px solid #444; color: #0f0; padding: 10px; outline: none; }
+        /* কিল সুইচ বাটন */
+        .kill-switch { background: var(--danger); color: white; border: none; padding: 25px; width: 100%; font-size: 1.5rem; font-weight: bold; margin-top: 30px; border-radius: 10px; cursor: pointer; animation: danger-pulse 2s infinite; }
 
-        /* রিভিউ সেকশন */
-        .review { font-style: italic; color: #aaa; margin-top: 15px; font-size: 0.85rem; }
-        .author { color: var(--neon); font-weight: bold; margin-top: 5px; display: block; }
-
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes glow { from { text-shadow: 0 0 10px var(--neon); } to { text-shadow: 0 0 30px var(--neon), 0 0 50px var(--danger); } }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(3); opacity: 0; } }
+        @keyframes danger-pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(255, 0, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0); } }
     </style>
 </head>
-<body>
+<body onclick="playWelcome()">
 
-    <div id="auth-overlay" onclick="startSystem()">
-        <button class="auth-btn">[ INITIALIZE RK-SHIELD ]</button>
+    <div id="matrix-bg"></div>
+
+    <div class="dark-feed">
+        <marquee behavior="scroll" direction="left">
+            [DARK-WEB LEAK] user_db_99x: hash_28384... | [BREACH] global_bank_usa: $2.4M logs | [RK-SHIELD] CRAWLING I2P NODES... | [CREDIT_CARD] 4532-xxxx-xxxx-8812 (USA)
+        </marquee>
     </div>
-
-    <div class="promo-bar">
-        ⚡ FLASH OFFER: 50% OFF ON ALL SERVICES! EXPIRES IN: <span id="timer">59:59</span>
-    </div>
-
-    <canvas id="matrix"></canvas>
 
     <header>
-        <h1 class="glitch-title">RK-SHIELD ULTIMATE</h1>
-        <p style="color: #888; margin-top: 10px;">GLOBAL CYBER SECURITY & OSINT SOLUTIONS</p>
+        <div class="glitch-main">RK-SHIELD APEX</div>
+        <p style="color: var(--blue); font-size: 1.1rem; letter-spacing: 5px;">THE FINAL CYBER FRONTIER</p>
     </header>
 
     <main>
         <section class="panel">
-            <h2>Elite Services</h2>
-            <div class="service-item">
-                <h3>Website Audit</h3>
-                <p style="font-size: 0.8rem; margin-bottom: 15px;">গভীরভাবে বাগ এবং ভলনারেবিলিটি খুঁজে বের করি।</p>
-                <button class="btn-hire" onclick="openChat()">REQUEST PRICE</button>
+            <h2>AI Threat Predictor</h2>
+            <div class="ai-box">
+                <p style="font-size: 0.8rem; margin-bottom: 10px;">TARGET HACK PROBABILITY</p>
+                <div class="percentage" id="ai-perc">87%</div>
+                <progress id="ai-progress" value="87" max="100" style="width:100%; accent-color: var(--blue);"></progress>
             </div>
-            <div class="service-item">
-                <h3>Data Breach Check</h3>
-                <p style="font-size: 0.8rem; margin-bottom: 15px;">আপনার ডাটা ডার্ক ওয়েবে লিক হয়েছে কি না দেখুন।</p>
-                <button class="btn-hire" style="background:var(--gold)" onclick="openChat()">SCAN NOW</button>
-            </div>
+            <p style="margin-top: 15px; font-size: 0.8rem; color: #888;">AI এনালাইসিস বলছে এই টার্গেটটি আগামী ২৪ ঘণ্টার মধ্যে অ্যাটাক হতে পারে।</p>
         </section>
 
         <section class="panel">
-            <h2>Live Threat Map</h2>
-            <div style="height: 200px; background: #050505; border: 1px solid #222; position: relative; overflow: hidden;">
-                <div id="scanner" style="width: 100%; height: 2px; background: var(--neon); position: absolute; top: 0; animation: scan 3s linear infinite;"></div>
-                <div id="attack-logs" style="padding: 10px; font-size: 0.7rem; color: #0f0;"></div>
+            <h2>Satellite Reconnaissance</h2>
+            <div id="map-sim">
+                <div class="pulse-point" style="top: 30%; left: 70%;"></div>
+                <div class="pulse-point" style="top: 60%; left: 20%;"></div>
+                <div class="pulse-point" style="top: 50%; left: 50%;"></div>
             </div>
+            <p style="text-align:center; font-size: 0.7rem; color: var(--neon); margin-top: 10px;">> LIVE CONNECTED TO 12 GLOBAL SAT-NODES</p>
         </section>
 
         <section class="panel">
-            <h2>Client Feedbacks</h2>
-            <div class="review">"RK-Shield saved our company from a major data leak. Highly recommended!"</div>
-            <span class="author">- CEO, TechCorp Global</span>
-            <div class="review" style="margin-top:20px;">"The best OSINT analysis I've ever seen. Pure professional work."</div>
-            <span class="author">- Security Analyst, CyberX</span>
+            <h2>Interstellar Services</h2>
+            <div style="font-size: 0.9rem;">
+                <p>• Zero-Day Protection</p>
+                <p>• Quantum Encryption (AES-512)</p>
+                <p>• Ghost Mode Browsing</p>
+            </div>
+            <button class="btn-interstellar" onclick="alert('Redirecting to Secure Chat...')">INITIATE DEEP CONTACT</button>
         </section>
-
-        <div id="chat-widget">
-            <div class="chat-header">
-                <span>🛡️ RK-LIVE SUPPORT</span>
-                <span onclick="closeChat()" style="cursor:pointer;">[X]</span>
-            </div>
-            <div class="chat-body" id="chat-msgs">
-                <p style="color: yellow;">> System: Secure channel established...</p>
-                <p>> RK: স্বাগতম! আমি RK। আপনি কীভাবে টাকা ইনকাম করতে চান বা কোন সার্ভিসটি প্রয়োজন? এখানে লিখুন।</p>
-            </div>
-            <div class="chat-input">
-                <input type="text" id="user-msg" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendMsg()">
-                <button onclick="sendMsg()" style="background:var(--neon); border:none; padding:10px; cursor:pointer; font-weight:bold;">SEND</button>
-            </div>
-        </div>
     </main>
 
+    <div style="padding: 0 40px;">
+        <button class="kill-switch" onclick="initiateKill()">TERMINATE ALL THREATS (KILL-SWITCH)</button>
+    </div>
+
+    <footer style="text-align: center; padding: 50px; border-top: 1px solid #1a1a1a; margin-top: 100px;">
+        <p>© 2026 kumedofficial.online | POWERED BY RK-ULTRA CORE</p>
+    </footer>
+
     <script>
-        // সিস্টেম বুট ও ভয়েস
-        function startSystem() {
-            document.getElementById('auth-overlay').style.display = 'none';
-            const msg = new SpeechSynthesisUtterance("Welcome to R K Shield Ultimate. All service nodes are active. Client acquisition mode initialized.");
-            window.speechSynthesis.speak(msg);
-            startAttackLogs();
-            startTimer();
+        function playWelcome() {
+            const msg = new SpeechSynthesisUtterance("R K Shield Interstellar mode active. Global satellite nodes connected. Monitoring Dark Web leaks. Welcome Commander.");
+            msg.rate = 0.8; window.speechSynthesis.speak(msg);
         }
 
-        // টাইমার ফাংশন
-        function startTimer() {
-            let time = 3599;
-            setInterval(() => {
-                let min = Math.floor(time / 60);
-                let sec = time % 60;
-                document.getElementById('timer').innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-                if(time > 0) time--;
-            }, 1000);
+        function initiateKill() {
+            alert("SATELLITE COMMAND SENT: ALL LOCAL THREATS ARE BEING TERMINATED!");
         }
 
-        // অ্যাটাক লগস সিমুলেশন
-        function startAttackLogs() {
-            const box = document.getElementById('attack-logs');
-            const logs = ["> Blocked: DDoS from RU", "> Warning: SQL Injection in USA", "> RK-ULTRA: Scanning...", "> Bypass attempt: BLOCKED", "> Status: 100% SECURE"];
-            setInterval(() => {
-                let p = document.createElement('p');
-                p.innerText = logs[Math.floor(Math.random()*logs.length)];
-                box.appendChild(p);
-                if(box.children.length > 8) box.removeChild(box.firstChild);
-            }, 1500);
-        }
-
-        function openChat() { document.getElementById('chat-widget').style.display = 'flex'; }
-        function closeChat() { document.getElementById('chat-widget').style.display = 'none'; }
-
-        function sendMsg() {
-            const input = document.getElementById('user-msg');
-            const msgs = document.getElementById('chat-msgs');
-            if(input.value.trim() !== "") {
-                msgs.innerHTML += `<p style="color:#fff; margin-top:5px;">> You: ${input.value}</p>`;
-                const val = input.value;
-                input.value = "";
-                setTimeout(() => {
-                    msgs.innerHTML += `<p style="color:var(--neon); margin-top:5px;">> RK: আপনার রিকোয়েস্ট প্রসেস হচ্ছে। আমি বর্তমানে অন্য একটি অডিটে ব্যস্ত আছি, তবে আপনি আপনার ডিটেইলস দিয়ে রাখুন। আমি দ্রুত কথা বলছি।</p>`;
-                    msgs.scrollTop = msgs.scrollHeight;
-                }, 1500);
-            }
-        }
-
-        // ম্যাট্রিক্স রেইন
-        const canvas = document.querySelector('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const drops = Array(Math.floor(canvas.width / 10)).fill(1);
-        function draw() {
-            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#0F0"; drops.forEach((y,i) => {
-                ctx.fillText(String.fromCharCode(Math.random()*128), i*10, y*10);
-                if(y*10 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            });
-        }
-        setInterval(draw, 50);
-    </script>
-    <style> @keyframes scan { from { top: 0; } to { top: 100%; } } </style>
+        // AI পার্সেন্টেজ র্যান্ডমাইজেশন
+        setInterval(() => {
+            let val = Math.floor(Math.random() * (99 - 70) + 70);
+            document.getElementById('ai-perc').innerText = val + "%";
+            document.getElementById('ai-progress').value = val;
+        }, 3000);
+    </script
+        >
 </body>
 </html>
