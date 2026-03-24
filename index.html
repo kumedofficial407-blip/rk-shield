@@ -3,253 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK-SHIELD | ULTIMATE SECURITY v6.0</title>
+    <title>RK-SHIELD | ELITE CYBER ENGINE v7.0</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
 
         :root {
-            --neon-green: #00ff41;
-            --neon-red: #ff003c;
-            --dark: #050505;
-            --panel-bg: rgba(10, 10, 10, 0.9);
+            --neon: #00ff41;
+            --bg: #000;
+            --danger: #ff003c;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
 
         body {
-            background-color: var(--dark);
+            background: var(--bg);
             color: white;
             font-family: 'Fira Code', monospace;
             overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
         }
 
         /* ম্যাট্রিক্স ব্যাকগ্রাউন্ড */
-        #bg-canvas {
-            position: fixed;
-            top: 0; left: 0; z-index: -1;
-            opacity: 0.1;
-        }
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
 
+        /* হেডার গ্লিচ */
         header {
-            padding: 25px;
+            padding: 40px;
             text-align: center;
-            border-bottom: 3px solid var(--neon-green);
-            background: var(--panel-bg);
-            box-shadow: 0 0 25px var(--neon-green);
-            z-index: 100;
+            border-bottom: 2px solid var(--neon);
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 30px var(--neon);
         }
 
-        header h1 {
-            font-size: 3rem;
-            color: var(--neon-green);
-            letter-spacing: 5px;
-            text-shadow: 0 0 20px var(--neon-green);
-            animation: flicker 2s infinite;
-        }
-
-        .news-ticker {
-            background: #ff0000;
-            color: white;
-            padding: 5px;
-            font-size: 0.8rem;
-            text-transform: uppercase;
+        .glitch {
+            font-size: 3.5rem;
             font-weight: bold;
+            color: var(--neon);
+            position: relative;
+            text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.05em 0 rgba(0, 255, 0, 0.75), 0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+            animation: glitch 500ms infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75); }
+            50% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75); }
+            100% { text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.05em 0 rgba(0, 255, 0, 0.75); }
         }
 
         main {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
-            padding: 30px;
-            max-width: 1500px;
+            padding: 40px;
+            max-width: 1600px;
             margin: auto;
-            z-index: 10;
         }
 
         .panel {
-            background: var(--panel-bg);
-            border: 1px solid rgba(0, 255, 65, 0.3);
-            padding: 20px;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid var(--neon);
+            padding: 25px;
+            box-shadow: inset 0 0 10px var(--neon);
+            border-radius: 10px;
+        }
+
+        .panel h2 { color: var(--neon); font-size: 1.2rem; margin-bottom: 15px; text-transform: uppercase; }
+
+        /* রাডার অ্যানিমেশন */
+        .radar {
+            width: 150px; height: 150px;
+            border: 2px solid var(--neon);
+            border-radius: 50%;
+            margin: 20px auto;
             position: relative;
-            transition: 0.3s;
-            border-radius: 5px;
+            background: repeating-radial-gradient(rgba(0, 255, 0, 0.1), rgba(0, 255, 0, 0.1) 10%, transparent 10%, transparent 20%);
         }
-
-        .panel:hover {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 15px var(--neon-green);
-            transform: scale(1.02);
+        .radar::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 50%; height: 2px; background: var(--neon);
+            transform-origin: left; animation: rotate 3s linear infinite;
         }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .panel h2 {
-            color: var(--neon-green);
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--neon-green);
-            padding-left: 10px;
-        }
-
-        /* আইপি ডাটা বক্স */
-        .info-row {
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-        }
-
-        .label { color: var(--neon-green); }
-        .value { color: #fff; font-weight: bold; }
-
-        /* টার্মিনাল ডিজাইন */
-        #terminal-box {
-            height: 200px;
-            background: black;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-y: auto;
-            font-size: 0.8rem;
-            color: #00ff00;
-            border: 1px solid #333;
-        }
-
-        /* অ্যানিমেশন */
-        @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-
-        marquee { font-size: 0.9rem; color: #ff0000; }
+        /* লাইভ কাউন্টার */
+        .counter { font-size: 2rem; color: var(--danger); text-align: center; font-weight: bold; }
 
         footer {
-            background: var(--panel-bg);
-            padding: 20px;
-            text-align: center;
-            border-top: 2px solid var(--neon-green);
-            margin-top: auto;
+            text-align: center; padding: 20px; border-top: 2px solid var(--neon);
+            background: black; font-size: 0.8rem;
         }
 
-        .btn-scan {
-            background: none;
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
-            padding: 10px 20px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            font-family: 'Fira Code', monospace;
+        button {
+            width: 100%; padding: 15px; background: none; border: 1px solid var(--neon);
+            color: var(--neon); font-family: 'Fira Code'; font-weight: bold;
+            transition: 0.3s; margin-top: 10px;
         }
+        button:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
 
-        .btn-scan:hover {
-            background: var(--neon-green);
-            color: black;
-        }
     </style>
 </head>
-<body>
+<body onclick="playWelcome()">
 
     <canvas id="bg-canvas"></canvas>
 
-    <div class="news-ticker">
-        <marquee behavior="scroll" direction="left">
-            [BREAKING] NEW ZERO-DAY EXPLOIT DETECTED | [SYSTEM] RK-ULTRA V5.0 DEPLOYED | [WARNING] BREACH DATA UPDATED 2026
-        </marquee>
-    </div>
-
     <header>
-        <h1>RK-SHIELD v6.0</h1>
-        <p>ADVANCED CYBER INTELLIGENCE & RECONNAISSANCE</p>
+        <div class="glitch">RK-SHIELD ELITE</div>
+        <p>> SYSTEM STATUS: <span id="sys-status" style="color:red;">UNSECURED</span> | RECONNAISSANCE MODE</p>
     </header>
 
     <main>
         <section class="panel">
-            <h2>Live Reconnaissance</h2>
-            <div class="info-row"><span class="label">IP Addr:</span> <span class="value" id="ip">Scanning...</span></div>
-            <div class="info-row"><span class="label">Location:</span> <span class="value" id="loc">Wait...</span></div>
-            <div class="info-row"><span class="label">ISP:</span> <span class="value" id="isp">Wait...</span></div>
-            <div class="info-row"><span class="label">Browser:</span> <span class="value" id="ua">Wait...</span></div>
+            <h2>Visitor Identification</h2>
+            <p>IP: <span id="ip" style="color:var(--neon)">Analyzing...</span></p>
+            <p>CITY: <span id="city">Wait...</span></p>
+            <p>ISP: <span id="isp">Wait...</span></p>
+            <div class="radar"></div>
         </section>
 
         <section class="panel">
-            <h2>Core Command Terminal</h2>
-            <div id="terminal-box">
-                <p>> RK-SHIELD Kernel v6.0.2 Loaded...</p>
-                <p>> Initializing Sub-domain Hunter...</p>
-                <div id="live-console"></div>
-            </div>
+            <h2>Terminal logs</h2>
+            <div id="logs" style="font-size: 0.8rem; height: 180px; overflow: hidden; color: #00ff00;"></div>
         </section>
 
         <section class="panel">
-            <h2>Database Scanner</h2>
-            <p style="font-size: 0.8rem; opacity: 0.7;">Check if target is compromised in 2026 breach list.</p>
-            <input type="text" placeholder="Enter target domain..." style="width:100%; padding:10px; margin-top:10px; background:black; border:1px solid #333; color:lime;">
-            <button class="btn-scan" onclick="startScan()">INITIATE DEEP SCAN</button>
+            <h2>Live Traffic</h2>
+            <div class="counter" id="visitor-count">104</div>
+            <p style="text-align:center; font-size:0.7rem;">Active Threats Detected</p>
+            <button onclick="alert('DEEP SCAN INITIATED!')">RUN SYSTEM DIAGNOSTICS</button>
         </section>
     </main>
 
     <footer>
-        <p>SYSTEM STATUS: <span id="status" style="color:var(--neon-green);">ONLINE</span> | SECURE ACCESS GRANTED</p>
-        <p style="font-size: 0.7rem; margin-top: 10px; opacity: 0.5;">Developed by RK for kumedofficial.online</p>
+        <p>© 2026 kumedofficial.online | ENCRYPTED BY RK-ULTRA V5.0</p>
     </footer>
 
     <script>
-        // আইপি ও ব্রাউজার ডিটেইলস
-        document.getElementById('ua').innerText = navigator.platform;
-        fetch('https://ipapi.co/json/')
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('ip').innerText = data.ip;
-                document.getElementById('loc').innerText = data.city + ", " + data.country_name;
-                document.getElementById('isp').innerText = data.org;
-            });
+        // আইপি ডিটেইলস
+        fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
+            document.getElementById('ip').innerText = data.ip;
+            document.getElementById('city').innerText = data.city;
+            document.getElementById('isp').innerText = data.org;
+            document.getElementById('sys-status').innerText = "SECURED";
+            document.getElementById('sys-status').style.color = "#00ff41";
+        });
 
-        // ম্যাট্রিক্স রেইন ব্যাকগ্রাউন্ড
+        // ম্যাট্রিক্স রেইন
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const letters = "RKSHIELD0101".split("");
-        const fontSize = 10;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-
-        function drawMatrix() {
-            ctx.fillStyle = "rgba(0,0,0,0.05)";
-            ctx.fillRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = "#0F0";
-            drops.forEach((y, i) => {
-                const text = letters[Math.floor(Math.random() * letters.length)];
-                ctx.fillText(text, i * fontSize, y * fontSize);
-                if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const drops = Array(Math.floor(canvas.width / 10)).fill(1);
+        function draw() {
+            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "#0F0"; drops.forEach((y,i) => {
+                ctx.fillText(String.fromCharCode(Math.random()*128), i*10, y*10);
+                if(y*10 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             });
         }
-        setInterval(drawMatrix, 50);
+        setInterval(draw, 50);
 
-        // লাইভ টার্মিনাল অ্যানিমেশন
-        const consoleBox = document.getElementById('live-console');
-        const logs = [
-            "Bypassing firewall [SSL:ENABLED]",
-            "Injecting payload to port 443...",
-            "Subdomain found: admin.internal.sec",
-            "Checking database vulnerabilities...",
-            "Access granted to directory /etc/shadow",
-            "Scanning for hidden API endpoints..."
-        ];
-        let count = 0;
+        // লগস এনিমেশন
+        const logsBox = document.getElementById('logs');
+        const phrases = ["> Bypassing Firewall...", "> Accessing Database...", "> Packet Sniffing...", "> Payload Injected.", "> Encryption Keys Found."];
         setInterval(() => {
-            const p = document.createElement('p');
-            p.innerText = "> " + logs[count % logs.length];
-            consoleBox.appendChild(p);
-            if(consoleBox.children.length > 8) consoleBox.removeChild(consoleBox.firstChild);
-            count++;
-        }, 2000);
+            let p = document.createElement('p');
+            p.innerText = phrases[Math.floor(Math.random()*phrases.length)];
+            logsBox.appendChild(p);
+            if(logsBox.children.length > 8) logsBox.removeChild(logsBox.firstChild);
+        }, 1500);
 
-        function startScan() {
-            alert("TARGET DATA ANALYSIS STARTED! CHECK TERMINAL LOGS.");
+        // সাউন্ড ইফেক্ট (ইউজার সাইটে ক্লিক করলে বাজবে)
+        function playWelcome() {
+            const msg = new SpeechSynthesisUtterance("System Access Granted. Welcome to RK Shield");
+            msg.rate = 0.8; window.speechSynthesis.speak(msg);
         }
+
+        // র্যান্ডম ভিজিটর কাউন্টার
+        setInterval(() => {
+            document.getElementById('visitor-count').innerText = Math.floor(Math.random() * (200 - 100) + 100);
+        }, 3000);
     </script>
 </body>
 </html>
