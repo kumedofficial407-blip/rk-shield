@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK-SHIELD | CYBER SECURITY ENGINE v2.0</title>
+    <title>RK-SHIELD | CYBER SECURITY ENGINE v5.0</title>
     <style>
-        /* প্রিমিয়াম ডার্ক থিম এবং অ্যানিমেশন */
+        /* প্রিমিয়াম ডার্ক থিম, ম্যাট্রিক্স রেইন এবং অ্যানিমেশন */
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
 
         :root {
@@ -22,60 +22,60 @@
             font-family: 'Fira Code', monospace;
             background-color: var(--background);
             color: var(--text);
-            overflow-x: hidden;
+            overflow: hidden; /* ম্যাট্রিক্স রেইনের জন্য স্ক্রল বন্ধ */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            position: relative;
         }
 
-        /* স্ক্যানিং অ্যানিমেশন background */
-        body::before {
-            content: "";
+        /* ১. ম্যাট্রিক্স রেইন ক্যানভাস */
+        #matrix-canvas {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(0, 20, 0, 0.5) 50%, rgba(0, 0, 0, 0.5) 50%);
-            background-size: 100% 4px;
-            z-index: 100;
-            pointer-events: none;
-            opacity: 0.1;
+            z-index: -1; /* কন্টেন্টের পেছনে থাকবে */
+            opacity: 0.15; /* খুব হালকা থাকবে যাতে কন্টেন্ট পড়া যায় */
         }
 
         /* হেডার */
         header {
-            background-color: var(--background-alt);
+            background-color: rgba(10, 10, 10, 0.9);
             padding: 20px;
             border-bottom: 2px solid var(--primary);
             text-align: center;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            z-index: 10;
         }
 
         header h1 {
             color: var(--primary);
-            font-size: 2.5rem;
-            text-shadow: 0 0 10px var(--primary);
+            font-size: 2.8rem;
+            text-shadow: 0 0 15px var(--primary);
             animation: textFlicker 1.5s infinite alternate;
         }
 
-        header p { font-size: 0.9rem; opacity: 0.7; margin-top: 5px; }
+        header p { font-size: 1rem; opacity: 0.8; margin-top: 5px; color: #fff; }
 
         /* মেইন কন্টেন্ট */
         main {
             flex: 1;
             padding: 30px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 25px;
             max-width: 1400px;
             margin: 0 auto;
             width: 100%;
+            z-index: 10;
+            overflow-y: auto; /* কন্টেন্ট স্ক্রল করা যাবে */
         }
 
         /* প্যানেল স্টাইল */
         .panel {
-            background-color: var(--background-alt);
-            border: 1px solid rgba(0, 255, 0, 0.1);
+            background-color: rgba(10, 10, 10, 0.9);
+            border: 1px solid rgba(0, 255, 0, 0.2);
             border-radius: 5px;
-            padding: 20px;
+            padding: 25px;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -83,81 +83,77 @@
 
         .panel:hover {
             border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
-            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+            transform: translateY(-5px);
         }
 
         .panel h2 {
             color: var(--primary);
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 255, 0, 0.3);
-            padding-bottom: 5px;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.4);
+            padding-bottom: 8px;
             display: flex;
             align-items: center;
         }
 
         .panel h2::before {
             content: "> ";
-            margin-right: 5px;
+            margin-right: 8px;
+            animation: blink 1s infinite;
         }
 
-        /* ১. আইপি ট্র্যাকার */
-        #ip-data {
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-        .data-item { color: var(--warning); margin-right: 5px; }
-        .data-value { color: #fff; font-weight: bold; }
+        /* আইপি ট্র্যাকার ডাটা */
+        .data-item { color: var(--warning); font-weight: bold; margin-right: 8px; }
+        .data-value { color: #fff; }
 
-        /* ২. ডেমো টার্মিনাল */
+        /* ডেমো টার্মিনাল */
         #terminal {
-            height: 150px;
+            height: 200px;
             overflow-y: auto;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #fff;
-            padding: 5px;
             scrollbar-width: thin;
+            padding-right: 10px;
         }
-        #terminal span { display: block; }
+        #terminal span { display: block; margin-bottom: 5px; }
         .cmd-cmd { color: var(--primary); }
-        .cmd-res { color: var(--warning); opacity: 0.8; }
+        .cmd-res { color: var(--warning); opacity: 0.9; }
         .cmd-err { color: var(--danger); }
 
-        /* ৩. লাইভ স্ক্যানার */
-        #scanner { text-align: center; position: relative; }
+        /* সাব-ডোমেইন স্ক্যানার */
         #scan-box {
-            font-size: 0.8rem;
+            text-align: center;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            padding: 15px;
             color: #fff;
-            padding: 10px;
-            border: 1px solid rgba(255, 0, 0, 0.2);
-            height: 100px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            animation: scanBorder 2s infinite;
         }
-        #scan-box span { animation: scanText 0.5s infinite; }
+        #scan-box span { animation: blink 0.8s infinite; }
 
-        /* ৪. টার্গেট এনালাইসিস */
+        /* ম্যানুয়াল এনালাইসিস বক্স */
         .target-box {
             text-align: center;
-            border: 2px dashed rgba(255, 0, 0, 0.3);
-            padding: 20px;
+            border: 2px dashed rgba(0, 255, 0, 0.3);
+            padding: 25px;
             cursor: pointer;
             transition: all 0.3s;
         }
-        .target-box:hover { border-color: var(--danger); background: rgba(255, 0, 0, 0.05); }
-        .target-box h3 { color: #fff; font-size: 1rem; }
-        .target-box p { font-size: 0.8rem; margin-top: 5px; opacity: 0.8; }
+        .target-box:hover {
+            border-color: var(--primary);
+            background-color: rgba(0, 255, 0, 0.05);
+        }
+        .target-box h3 { color: #fff; }
+        .target-box p { font-size: 0.9rem; opacity: 0.8; margin-top: 8px; }
 
         /* ফুটার */
         footer {
-            background-color: var(--background-alt);
+            background-color: rgba(10, 10, 10, 0.9);
             padding: 15px;
             text-align: center;
             border-top: 2px solid var(--primary);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
+            z-index: 10;
         }
 
         /* অ্যানিমেশনসমূহ */
@@ -168,38 +164,42 @@
             100% { opacity: 1; text-shadow: 0 0 10px rgba(0, 255, 0, 0.5); }
         }
 
-        @keyframes scanText {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        @keyframes scanBorder {
+            0%, 100% { border-color: rgba(255, 0, 0, 0.3); }
+            50% { border-color: rgba(255, 0, 0, 1); box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
         }
 
         /* রেসপন্সিভ */
         @media (max-width: 600px) {
-            header h1 { font-size: 1.8rem; }
+            header h1 { font-size: 2rem; }
             main { padding: 15px; }
+            .panel { padding: 15px; }
         }
     </style>
 </head>
 <body>
+    <canvas id="matrix-canvas"></canvas>
+
     <header>
         <h1>RK-SHIELD</h1>
-        <p>CYBER SECURITY ENGINE v2.0 | Codename: ULTRA-PRO</p>
+        <p>CYBER SECURITY ENGINE v5.0 | Codename: ULTRA-PRO</p>
     </header>
 
     <main>
         <section class="panel">
-            <h2>Visitor Profile</h2>
+            <h2>Visitor Profile (Live)</h2>
             <div id="ip-data">
-                <p><span class="data-item">IP:</span><span id="ip-val" class="data-value">Loading...</span></p>
-                <p><span class="data-item">Target:</span><span id="city-val" class="data-value">Wait...</span></p>
-                <p><span class="data-item">Region:</span><span id="region-val" class="data-value">Wait...</span></p>
-                <p><span class="data-item">ISP:</span><span id="isp-val" class="data-value">Wait...</span></p>
+                <p><span class="data-item">IP Address:</span><span id="ip-val" class="data-value">Loading...</span></p>
+                <p><span class="data-item">City/Target:</span><span id="city-val" class="data-value">Wait...</span></p>
+                <p><span class="data-item">Country:</span><span id="country-val" class="data-value">Wait...</span></p>
+                <p><span class="data-item">Internet Provider (ISP):</span><span id="isp-val" class="data-value">Wait...</span></p>
             </div>
         </section>
 
         <section class="panel">
-            <h2>Termux Terminal v5.0</h2>
+            <h2>Termux Terminal</h2>
             <div id="terminal">
                 <span class="cmd-cmd">root@RK-shield:~# system_init --ultra-pro v5.0</span>
                 <span class="cmd-res">[OK] Kernel Loaded</span>
@@ -220,7 +220,7 @@
 
         <section class="panel">
             <h2>Manual Analysis</h2>
-            <div class="target-box" onclick="alert('Analysis Initiated!')">
+            <div class="target-box" onclick="alert('Target Analysis Initiated!')">
                 <h3>Submit New Target</h3>
                 <p>Click to provide domain or IP for deep scan.</p>
             </div>
@@ -232,20 +232,52 @@
     </footer>
 
     <script>
-        // আইপি ট্র্যাকার স্ক্রিপ্ট
+        // ১. ম্যাট্রিক্স রেইন স্ক্রিপ্ট
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+
+        const matrixChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%";
+        const characters = matrixChars.split("");
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let x = 0; x < columns; x++) drops[x] = 1;
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.04)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#0F0"; // Green text
+            ctx.font = fontSize + "px arial";
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters[Math.floor(Math.random() * characters.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 35);
+
+        // ২. রিয়াল আইপি ট্র্যাকার স্ক্রিপ্ট
         fetch('https://ipapi.co/json/')
             .then(response => response.json())
             .then(data => {
                 document.getElementById('ip-val').innerText = data.ip;
                 document.getElementById('city-val').innerText = data.city;
-                document.getElementById('region-val').innerText = data.region;
+                document.getElementById('country-val').innerText = data.country_name;
                 document.getElementById('isp-val').innerText = data.org;
             })
             .catch(error => {
                 document.getElementById('ip-val').innerText = 'Error';
             });
 
-        // টার্মিনাল অ্যানিমেশন
+        // ৩. টার্মিনাল অ্যানিমেশন
         const terminal = document.getElementById('terminal');
         const commands = [
             "starting sub-domain scan...",
@@ -254,7 +286,9 @@
             "scanning: stats.google.com...",
             "finding vulnerabilities...",
             "[OK] Vulnerability found in old server!",
-            "generating report..."
+            "generating report...",
+            "starting payload delivery...",
+            "[OK] Payload delivered successfully."
         ];
         let i = 0;
         setInterval(() => {
@@ -266,16 +300,16 @@
                 terminal.scrollTop = terminal.scrollHeight;
                 i++;
             } else { i = 0; terminal.innerHTML = ""; } // Reset
-        }, 2000);
+        }, 2500);
 
-        // লাইভ স্ক্যানার অ্যানিমেশন
+        // ৪. লাইভ স্ক্যানার অ্যানিমেশন
         const scanBox = document.getElementById('scan-box');
         let scanIndex = 0;
         const scanTextList = ['Scanning.','Scanning..','Scanning...','Hacking.','Hacking..','Hacking...'];
         setInterval(() => {
             scanBox.innerHTML = `<span>${scanTextList[scanIndex]}</span>`;
             scanIndex = (scanIndex + 1) % scanTextList.length;
-        }, 500);
+        }, 600);
 
     </script>
 </body>
