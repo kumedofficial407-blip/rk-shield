@@ -1,69 +1,143 @@
-<!DOCTYPE html>
+<l!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK-SHIELD | SYSTEM V10.0</title>
+    <title>RK-SHIELD | GOD MODE v11.0</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@700&display=swap');
-        :root { --neon: #00ff41; --bg: #000; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { height: 100%; background: var(--bg); font-family: 'Fira Code', monospace; overflow: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
+        :root { --neon: #00ff41; --bg: #000; --danger: #ff003c; --gold: #ffd700; --blue: #00d4ff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+        body { background: var(--bg); color: white; font-family: 'Fira Code', monospace; overflow-x: hidden; }
+        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
 
-        /* এটি একটি বড় অদৃশ্য বাটন যা পুরো স্ক্রিন জুড়ে থাকবে */
-        #auth-trigger {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: #000; z-index: 9999; cursor: pointer;
-            border: 2px solid var(--neon);
-        }
+        /* এন্ট্রি স্ক্রিন */
+        #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; border: 2px solid var(--neon); }
+        .auth-btn { padding: 20px 40px; border: 2px solid var(--neon); color: var(--neon); font-size: 1.5rem; background: transparent; font-family: 'Fira Code'; box-shadow: 0 0 20px var(--neon); animation: pulse 1s infinite; cursor: pointer; }
 
-        .pulse { color: var(--neon); font-size: 1.2rem; text-align: center; letter-spacing: 2px; animation: blink 1s infinite; }
-        .tap-text { color: #fff; margin-top: 20px; font-size: 0.8rem; opacity: 0.6; }
+        header { padding: 30px; text-align: center; border-bottom: 2px solid var(--neon); background: rgba(0,0,0,0.9); box-shadow: 0 0 30px var(--neon); }
+        .glitch-title { font-size: 2.5rem; color: var(--neon); text-shadow: 2px 2px var(--danger); animation: flicker 2s infinite; }
 
-        #dashboard { display: none; padding: 20px; height: 100%; }
-        .glitch { font-size: 2rem; color: var(--neon); text-align: center; margin-top: 20px; text-shadow: 0 0 10px var(--neon); }
+        main { padding: 20px; max-width: 1400px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        
+        .panel { background: rgba(10, 10, 10, 0.95); border: 1px solid #333; padding: 25px; border-radius: 12px; transition: 0.4s; position: relative; overflow: hidden; }
+        .panel:hover { border-color: var(--neon); box-shadow: 0 0 20px rgba(0,255,65,0.2); transform: translateY(-5px); }
+        .panel h2 { color: var(--neon); font-size: 1.2rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #222; padding-bottom: 10px; }
 
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        /* সাবস্ক্রিপশন টেবিল */
+        .sub-container { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+        .card { background: #0a0a0a; border: 1px solid #222; padding: 30px; border-radius: 15px; text-align: center; position: relative; }
+        .card.pro { border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+        .card h3 { font-size: 1.5rem; margin-bottom: 15px; color: var(--blue); }
+        .card.pro h3 { color: var(--gold); }
+        .price { font-size: 2rem; font-weight: bold; margin: 15px 0; color: #fff; }
+        .btn-sub { width: 100%; padding: 12px; background: var(--neon); color: #000; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+        .btn-sub:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+
+        /* রাডার */
+        .radar-box { width: 150px; height: 150px; border: 2px solid var(--neon); border-radius: 50%; margin: 20px auto; position: relative; overflow: hidden; }
+        .radar-line { position: absolute; top: 50%; left: 50%; width: 50%; height: 2px; background: var(--neon); transform-origin: left; animation: rotate 3s linear infinite; }
+        
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
     </style>
 </head>
 <body>
 
-    <div id="auth-trigger" onclick="launchSystem()">
-        <div class="pulse">[ RK-SHIELD CORE: ACTIVE ]</div>
-        <div class="tap-text">TAP ANYWHERE TO AUTHENTICATE</div>
+    <div id="auth-overlay" onclick="bootSystem()">
+        <button class="auth-btn">[ INITIALIZE RK-SHIELD ]</button>
     </div>
 
-    <div id="dashboard">
-        <h1 class="glitch">RK-SHIELD ONLINE</h1>
-        <div style="border: 1px solid var(--neon); margin-top: 50px; padding: 20px; color: #0f0; font-size: 0.9rem;">
-            <p>> Accessing secure nodes...</p>
-            <p>> Connection: Encrypted</p>
-            <p id="audio-status" style="color: yellow;">> Audio: Initializing...</p>
+    <canvas id="matrix"></canvas>
+
+    <header>
+        <h1 class="glitch-title">RK-SHIELD ULTIMATE</h1>
+        <p style="font-size: 0.8rem; margin-top: 10px; color: #aaa;">CORE ENGINE v11.0 | SECURE NODES ACTIVE</p>
+    </header>
+
+    <main>
+        <section class="panel">
+            <h2>Live Intelligence</h2>
+            <p style="margin-bottom: 10px;">IP: <span id="ip" style="color:var(--neon)">Scanning...</span></p>
+            <p style="margin-bottom: 10px;">LOC: <span id="loc">Wait...</span></p>
+            <p>ISP: <span id="isp">Wait...</span></p>
+            <div class="radar-box"><div class="radar-line"></div></div>
+        </section>
+
+        <section class="panel">
+            <h2>System Logs</h2>
+            <div id="logs" style="font-size: 0.8rem; height: 220px; overflow-y: hidden; color: #00ff00;"></div>
+        </section>
+
+        <div class="sub-container">
+            <div class="card">
+                <h3>BASIC SHIELD</h3>
+                <div class="price">৳ 500<span style="font-size: 0.8rem;">/mo</span></div>
+                <p>• Web Reconnaissance<br>• Vulnerability Scan</p>
+                <button class="btn-sub" onclick="alert('Contact RK for Basic Access')">SELECT PLAN</button>
+            </div>
+            <div class="card pro">
+                <h3>ULTRA ELITE</h3>
+                <div class="price">৳ 1500<span style="font-size: 0.8rem;">/mo</span></div>
+                <p>• Dark Web Monitoring<br>• 24/7 Threat Hunting</p>
+                <button class="btn-sub" style="background:var(--gold)" onclick="alert('Contact RK for Elite Access')">UPGRADE NOW</button>
+            </div>
+            <div class="card">
+                <h3>BUSINESS PRO</h3>
+                <div class="price">৳ 5000<span style="font-size: 0.8rem;">/mo</span></div>
+                <p>• Full Infrastructure Audit<br>• Incident Response</p>
+                <button class="btn-sub" onclick="alert('Contact RK for Enterprise')">CONTACT SALES</button>
+            </div>
         </div>
-    </div>
+    </main>
+
+    <footer style="text-align: center; padding: 40px; border-top: 1px solid #222; margin-top: 50px;">
+        <p>© 2026 kumedofficial.online | RK-SHIELD GLOBAL SECURITY</p>
+    </footer>
 
     <script>
-        function launchSystem() {
-            // ১. ডিসপ্লে পরিবর্তন
-            document.getElementById('auth-trigger').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
+        // আইপি ডাটা
+        fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
+            document.getElementById('ip').innerText = data.ip;
+            document.getElementById('loc').innerText = data.city + ", " + data.country_name;
+            document.getElementById('isp').innerText = data.org;
+        });
 
-            // ২. ভয়েস মেসেজ (স্পিচ ইঞ্জিন)
-            const speech = new SpeechSynthesisUtterance();
-            speech.text = "System authentication successful. Welcome, R K. Shield mode is now active on kumed official dot online.";
-            speech.lang = 'en-US';
-            speech.rate = 0.85;
-            speech.pitch = 0.7;
+        // ম্যাট্রিক্স রেইন
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const drops = Array(Math.floor(canvas.width / 10)).fill(1);
+        function draw() {
+            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "#0F0"; drops.forEach((y,i) => {
+                ctx.fillText(String.fromCharCode(Math.random()*128), i*10, y*10);
+                if(y*10 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(draw, 50);
 
-            // ভয়েস শুরু
-            window.speechSynthesis.speak(speech);
-            
-            // ৩. স্ট্যাটাস আপডেট
-            setTimeout(() => {
-                document.getElementById('audio-status').innerHTML = "> Audio: Playback Successful";
-                document.getElementById('audio-status').style.color = "#00ff41";
-            }, 1000);
+        // সিস্টেম বুট ও ভয়েস
+        function bootSystem() {
+            document.getElementById('auth-overlay').style.display = 'none';
+            const msg = new SpeechSynthesisUtterance("Welcome RK. God Mode Initialized. All systems are under your control on kumed official dot online.");
+            msg.rate = 0.9; msg.pitch = 0.8;
+            window.speechSynthesis.speak(msg);
+            startLogs();
+        }
+
+        // লগস এনিমেশন
+        function startLogs() {
+            const logsBox = document.getElementById('logs');
+            const phrases = ["> Bypassing Firewall...", "> Accessing Database...", "> Encryption: AES-256 Active", "> Packet Sniffing started...", "> RK-ULTRA v5.0 Loaded.", "> Target Acquired.", "> Status: UNSTOPPABLE"];
+            setInterval(() => {
+                let p = document.createElement('p');
+                p.innerText = phrases[Math.floor(Math.random()*phrases.length)];
+                logsBox.appendChild(p);
+                if(logsBox.children.length > 10) logsBox.removeChild(logsBox.firstChild);
+            }, 1200);
         }
     </script>
 </body>
