@@ -3,147 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK-SHIELD | ELITE CYBER ENGINE v7.0</title>
+    <title>RK-SHIELD | ELITE SECURITY v7.5</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
-
-        :root {
-            --neon: #00ff41;
-            --bg: #000;
-            --danger: #ff003c;
-        }
-
+        :root { --neon: #00ff41; --bg: #000; --danger: #ff003c; }
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
-
-        body {
-            background: var(--bg);
-            color: white;
-            font-family: 'Fira Code', monospace;
-            overflow-x: hidden;
-        }
-
-        /* ম্যাট্রিক্স ব্যাকগ্রাউন্ড */
+        body { background: var(--bg); color: white; font-family: 'Fira Code', monospace; overflow-x: hidden; }
         #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
-
-        /* হেডার গ্লিচ */
-        header {
-            padding: 40px;
-            text-align: center;
-            border-bottom: 2px solid var(--neon);
-            background: rgba(0, 0, 0, 0.8);
-            box-shadow: 0 0 30px var(--neon);
-        }
-
-        .glitch {
-            font-size: 3.5rem;
-            font-weight: bold;
-            color: var(--neon);
-            position: relative;
-            text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.05em 0 rgba(0, 255, 0, 0.75), 0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
-            animation: glitch 500ms infinite;
-        }
-
-        @keyframes glitch {
-            0% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75); }
-            50% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75); }
-            100% { text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.05em 0 rgba(0, 255, 0, 0.75); }
-        }
-
-        main {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 40px;
-            max-width: 1600px;
-            margin: auto;
-        }
-
-        .panel {
-            background: rgba(15, 15, 15, 0.95);
-            border: 1px solid var(--neon);
-            padding: 25px;
-            box-shadow: inset 0 0 10px var(--neon);
-            border-radius: 10px;
-        }
-
-        .panel h2 { color: var(--neon); font-size: 1.2rem; margin-bottom: 15px; text-transform: uppercase; }
-
-        /* রাডার অ্যানিমেশন */
-        .radar {
-            width: 150px; height: 150px;
-            border: 2px solid var(--neon);
-            border-radius: 50%;
-            margin: 20px auto;
-            position: relative;
-            background: repeating-radial-gradient(rgba(0, 255, 0, 0.1), rgba(0, 255, 0, 0.1) 10%, transparent 10%, transparent 20%);
-        }
-        .radar::after {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            width: 50%; height: 2px; background: var(--neon);
-            transform-origin: left; animation: rotate 3s linear infinite;
-        }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        /* লাইভ কাউন্টার */
-        .counter { font-size: 2rem; color: var(--danger); text-align: center; font-weight: bold; }
-
-        footer {
-            text-align: center; padding: 20px; border-top: 2px solid var(--neon);
-            background: black; font-size: 0.8rem;
-        }
-
-        button {
-            width: 100%; padding: 15px; background: none; border: 1px solid var(--neon);
-            color: var(--neon); font-family: 'Fira Code'; font-weight: bold;
-            transition: 0.3s; margin-top: 10px;
-        }
-        button:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
-
+        header { padding: 40px; text-align: center; border-bottom: 2px solid var(--neon); background: rgba(0, 0, 0, 0.8); box-shadow: 0 0 30px var(--neon); }
+        .glitch { font-size: 3rem; font-weight: bold; color: var(--neon); position: relative; animation: flicker 2s infinite; }
+        main { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 30px; max-width: 1400px; margin: auto; }
+        .panel { background: rgba(15, 15, 15, 0.95); border: 1px solid var(--neon); padding: 25px; border-radius: 10px; position: relative; }
+        .panel h2 { color: var(--neon); font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        #terminal-logs { height: 180px; overflow-y: auto; font-size: 0.8rem; color: #00ff00; }
+        .counter { font-size: 2rem; color: var(--danger); text-align: center; }
+        .btn-action { width: 100%; padding: 15px; background: none; border: 1px solid var(--neon); color: var(--neon); font-family: 'Fira Code'; margin-top: 10px; font-weight: bold; }
+        .btn-action:hover { background: var(--neon); color: black; box-shadow: 0 0 20px var(--neon); }
+        #welcome-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; text-align: center; }
+        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
     </style>
 </head>
-<body onclick="playWelcome()">
+<body>
+
+    <div id="welcome-overlay" onclick="startEngine()">
+        <div>
+            <h1 style="color:var(--neon); margin-bottom: 20px;">[ ACCESS GRANTED ]</h1>
+            <p style="color:#fff; font-size: 1.2rem;">TAP ANYWHERE TO ENTER RK-SHIELD</p>
+        </div>
+    </div>
 
     <canvas id="bg-canvas"></canvas>
 
     <header>
-        <div class="glitch">RK-SHIELD ELITE</div>
-        <p>> SYSTEM STATUS: <span id="sys-status" style="color:red;">UNSECURED</span> | RECONNAISSANCE MODE</p>
+        <div class="glitch">RK-SHIELD v7.5</div>
+        <p>> SYSTEM: <span id="sys-status" style="color:var(--neon);">SECURED</span> | RECONNAISSANCE MODE</p>
     </header>
 
     <main>
         <section class="panel">
             <h2>Visitor Identification</h2>
-            <p>IP: <span id="ip" style="color:var(--neon)">Analyzing...</span></p>
-            <p>CITY: <span id="city">Wait...</span></p>
+            <p>IP: <span id="ip" style="color:var(--neon)">Scanning...</span></p>
+            <p>LOC: <span id="loc">Wait...</span></p>
             <p>ISP: <span id="isp">Wait...</span></p>
-            <div class="radar"></div>
+            <div id="radar" style="width:100px; height:100px; border:1px solid var(--neon); border-radius:50%; margin: 15px auto; border-top-color: transparent; animation: spin 2s linear infinite;"></div>
         </section>
 
         <section class="panel">
-            <h2>Terminal logs</h2>
-            <div id="logs" style="font-size: 0.8rem; height: 180px; overflow: hidden; color: #00ff00;"></div>
+            <h2>Core Command logs</h2>
+            <div id="terminal-logs"></div>
         </section>
 
         <section class="panel">
-            <h2>Live Traffic</h2>
-            <div class="counter" id="visitor-count">104</div>
-            <p style="text-align:center; font-size:0.7rem;">Active Threats Detected</p>
-            <button onclick="alert('DEEP SCAN INITIATED!')">RUN SYSTEM DIAGNOSTICS</button>
+            <h2>Active Threats</h2>
+            <div class="counter" id="v-count">104</div>
+            <p style="text-align:center; font-size:0.7rem; opacity:0.7;">Malicious Packets Detected</p>
+            <button class="btn-action" onclick="deepScan()">RUN DEEP ANALYSIS</button>
         </section>
     </main>
 
-    <footer>
+    <footer style="text-align:center; padding:20px; border-top: 1px solid var(--neon);">
         <p>© 2026 kumedofficial.online | ENCRYPTED BY RK-ULTRA V5.0</p>
     </footer>
 
     <script>
-        // আইপি ডিটেইলস
+        // আইপি ও লোকেশন ডাটা
         fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
             document.getElementById('ip').innerText = data.ip;
-            document.getElementById('city').innerText = data.city;
+            document.getElementById('loc').innerText = data.city + ", " + data.country_name;
             document.getElementById('isp').innerText = data.org;
-            document.getElementById('sys-status').innerText = "SECURED";
-            document.getElementById('sys-status').style.color = "#00ff41";
         });
 
         // ম্যাট্রিক্স রেইন
@@ -162,25 +89,33 @@
         setInterval(draw, 50);
 
         // লগস এনিমেশন
-        const logsBox = document.getElementById('logs');
-        const phrases = ["> Bypassing Firewall...", "> Accessing Database...", "> Packet Sniffing...", "> Payload Injected.", "> Encryption Keys Found."];
+        const logsBox = document.getElementById('terminal-logs');
+        const phrases = ["> Bypassing Firewall...", "> Accessing Database...", "> Packet Sniffing...", "> Payload Injected.", "> Encryption Keys Found.", "> RK-ULTRA V5.0 ACTIVE."];
         setInterval(() => {
             let p = document.createElement('p');
             p.innerText = phrases[Math.floor(Math.random()*phrases.length)];
             logsBox.appendChild(p);
             if(logsBox.children.length > 8) logsBox.removeChild(logsBox.firstChild);
-        }, 1500);
+            logsBox.scrollTop = logsBox.scrollHeight;
+        }, 1200);
 
-        // সাউন্ড ইফেক্ট (ইউজার সাইটে ক্লিক করলে বাজবে)
-        function playWelcome() {
-            const msg = new SpeechSynthesisUtterance("System Access Granted. Welcome to RK Shield");
-            msg.rate = 0.8; window.speechSynthesis.speak(msg);
+        // মেইন ফাংশন (ভয়েস ও এন্ট্রি)
+        function startEngine() {
+            document.getElementById('welcome-overlay').style.display = 'none';
+            const msg = new SpeechSynthesisUtterance("System Access Granted. Welcome to RK Shield Security Engine. All systems are operational.");
+            msg.rate = 0.9; msg.pitch = 0.8;
+            window.speechSynthesis.speak(msg);
         }
 
-        // র্যান্ডম ভিজিটর কাউন্টার
+        function deepScan() {
+            alert("Deep Analysis Initiated. Tracking target packets...");
+        }
+
         setInterval(() => {
-            document.getElementById('visitor-count').innerText = Math.floor(Math.random() * (200 - 100) + 100);
-        }, 3000);
+            document.getElementById('v-count').innerText = Math.floor(Math.random() * (500 - 100) + 100);
+        }, 2000);
     </script>
-</body>
+    <style> @keyframes spin { to { transform: rotate(360deg); } } </style>
+</b
+    ody>
 </html>
