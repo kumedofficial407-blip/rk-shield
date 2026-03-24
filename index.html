@@ -3,181 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK-SHIELD | APEX PREDATOR v12.0</title>
+    <title>RK-SHIELD | BUSINESS ENGINE v14.1</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
-        :root { --neon-green: #00ff41; --danger-red: #ff003c; --bg-black: #000; --panel-bg: rgba(10, 10, 10, 0.95); --electric-blue: #00d4ff; }
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
-        body { background: var(--bg-black); color: white; font-family: 'Fira Code', monospace; overflow-x: hidden; }
-        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.12; }
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+        :root { --neon: #00ff41; --bg: #000; --danger: #ff003c; --blue: #00d4ff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: white; font-family: 'Fira Code', monospace; overflow-x: hidden; }
 
-        /* সিস্টেম অথেন্টিকেশন স্ক্রিন */
-        #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; text-align: center; border: 3px solid var(--neon-green); box-sizing: border-box; }
-        .auth-btn { padding: 25px 50px; border: 2px solid var(--neon-green); color: var(--neon-green); font-size: 1.8rem; background: transparent; font-family: 'Fira Code'; box-shadow: 0 0 30px var(--neon-green); animation: pulse 1s infinite; cursor: pointer; text-transform: uppercase; letter-spacing: 5px; }
+        /* এন্ট্রি স্ক্রিন */
+        #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; border: 3px solid var(--neon); }
+        .auth-btn { padding: 20px 40px; border: 2px solid var(--neon); color: var(--neon); font-size: 1.5rem; background: transparent; cursor: pointer; box-shadow: 0 0 20px var(--neon); text-transform: uppercase; letter-spacing: 3px; }
 
-        header { padding: 30px; text-align: center; border-bottom: 2px solid var(--neon-green); background: rgba(0,0,0,0.9); box-shadow: 0 0 30px var(--neon-green); z-index: 100; position: relative; }
-        .glitch-title { font-size: 3rem; color: var(--neon-green); text-shadow: 3px 3px var(--danger-red); animation: flicker 3s infinite; }
-        .status-bar { background: var(--danger-red); color: white; padding: 5px; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; }
+        header { padding: 30px; text-align: center; border-bottom: 2px solid var(--neon); background: rgba(0,0,0,0.9); box-shadow: 0 0 20px var(--neon); }
+        .glitch-title { font-size: 2.5rem; color: var(--neon); text-shadow: 2px 2px var(--danger); }
 
-        main { padding: 25px; max-width: 1600px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; position: relative; z-index: 10; }
+        main { padding: 25px; max-width: 1200px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        .panel { background: rgba(10,10,10,0.95); border: 1px solid #333; padding: 25px; border-radius: 15px; transition: 0.3s; position: relative; }
+        .panel:hover { border-color: var(--neon); box-shadow: 0 0 20px rgba(0,255,65,0.2); transform: translateY(-5px); }
         
-        .panel { background: var(--panel-bg); border: 1px solid #222; padding: 25px; border-radius: 15px; transition: 0.4s; position: relative; overflow: hidden; }
-        .panel:hover { border-color: var(--neon-green); box-shadow: 0 0 25px rgba(0,255,65,0.2); transform: translateY(-5px); }
-        .panel h2 { color: var(--neon-green); font-size: 1.3rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #222; padding-bottom: 10px; display: flex; align-items: center; }
-        .panel h2::before { content: '>'; margin-right: 10px; animation: blink 1s infinite; }
+        /* সার্ভিস বক্স */
+        .service-box { background: rgba(0, 255, 65, 0.05); border: 1px dashed var(--neon); padding: 20px; border-radius: 10px; margin-top: 15px; text-align: center; }
+        .price-tag { font-size: 1.2rem; color: var(--neon); font-weight: bold; margin-bottom: 10px; display: block; }
+        .btn-hire { width: 100%; padding: 15px; background: var(--neon); color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-hire:hover { background: #fff; box-shadow: 0 0 20px #fff; }
 
-        /* বিপজ্জনক সিস্টেম: Ransomware Simulator */
-        .ransom-box { border: 2px solid var(--danger-red); padding: 15px; background: rgba(255, 0, 60, 0.1); border-radius: 8px; text-align: center; }
-        .ransom-text { color: var(--danger-red); font-weight: bold; font-size: 1.1rem; animation: textPulse 1s infinite; }
-        .timer { font-size: 2rem; color: #fff; margin: 10px 0; font-weight: bold; }
+        /* লাইভ চ্যাট উইজেট */
+        #chat-widget { position: fixed; bottom: 20px; right: 20px; width: 320px; height: 450px; background: #050505; border: 2px solid var(--neon); border-radius: 12px; display: none; flex-direction: column; z-index: 999; box-shadow: 0 0 30px var(--neon); }
+        .chat-header { background: var(--neon); color: #000; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; border-radius: 10px 10px 0 0; }
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; font-size: 0.85rem; color: #0f0; background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); }
+        .chat-input { padding: 12px; border-top: 1px solid #333; display: flex; gap: 5px; background: #111; border-radius: 0 0 10px 10px; }
+        .chat-input input { flex: 1; background: #000; border: 1px solid #444; color: #0f0; padding: 10px; outline: none; border-radius: 4px; }
+        .btn-send { background: var(--neon); border: none; padding: 10px 15px; cursor: pointer; font-weight: bold; border-radius: 4px; }
 
-        /* প্রগ্রেস বার */
-        .progress-bar-container { width: 100%; background: #222; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 15px; }
-        .progress-bar-fill { height: 100%; background: var(--neon-green); width: 0%; transition: width 0.1s; }
-
-        /* পোর্ট স্ক্যানার অ্যানিমেশন */
-        .scanner-circle { width: 120px; height: 120px; border: 2px solid var(--electric-blue); border-radius: 50%; margin: 20px auto; position: relative; }
-        .scanner-line { position: absolute; top: 50%; left: 50%; width: 50%; height: 2px; background: var(--electric-blue); transform-origin: left; animation: rotate 2s linear infinite; }
-
-        /* লিডারবোর্ড */
-        .leaderboard-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.9rem; }
-        .rank { color: var(--neon-green); font-weight: bold; }
-
-        /* হিডেন অ্যাডমিন বাটন */
-        #hidden-admin { position: fixed; bottom: 10px; right: 10px; width: 10px; height: 10px; background: transparent; cursor: pointer; z-index: 1000; }
-        #hidden-admin:hover { background: rgba(255,255,255,0.1); }
-
-        footer { text-align: center; padding: 40px; border-top: 1px solid #222; margin-top: 50px; background: rgba(0,0,0,0.9); position: relative; z-index: 10; }
-
-        /* অ্যানিমেশনসমূহ */
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } 80% { opacity: 0.9; } }
-        @keyframes blink { 50% { opacity: 0; } }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes textPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        
-        @media (max-width: 768px) { .glitch-title { font-size: 2.2rem; } main { grid-template-columns: 1fr; } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div id="auth-overlay" onclick="bootApexSystem()">
-        <button class="auth-btn">[ INITIALIZE APEX PREDATOR ]</button>
-    </div>
-
-    <canvas id="matrix"></canvas>
-
-    <div class="status-bar">
-        <marquee>⚠️ SYSTEM: APEX PREDATOR V12.0 ACTIVE | 🌐 MONITORING TRAFFIC ON kumedofficial.online | 🔴 ENCRYPTION: SECURE | 📡 RECONNAISSANCE NODES: ONLINE</marquee>
+    <div id="auth-overlay" onclick="startSystem()">
+        <button class="auth-btn">[ ACCESS RK-SHIELD ]</button>
     </div>
 
     <header>
-        <h1 class="glitch-title">RK-SHIELD APEX</h1>
-        <p style="font-size: 0.9rem; margin-top: 10px; color: #aaa;">DOMINATION THROUGH INTELLIGENCE</p>
+        <h1 class="glitch-title">RK-SHIELD SERVICES</h1>
+        <p style="color: #888; font-size: 0.9rem; margin-top: 5px;">ELITE CYBER DEFENSE & AUDIT ENGINE</p>
     </header>
 
     <main>
-l        <section class="panel">
-            <h2>Dominance Control</h2>
-            <div class="ransom-box">
-                <p class="ransom-text">Target Encryption in Progress</p>
-                <div class="timer" id="countdown">05:00:00</div>
-                <p style="font-size: 0.7rem; color: #aaa;">[ STATUS: DEPLOYING PAYLOAD ]</p>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" id="ransom-progress"></div></div>
-        </section>
-
         <section class="panel">
-            <h2>Core Execution Logs</h2>
-            <div id="logs" style="font-size: 0.8rem; height: 230px; overflow-y: hidden; color: #00ff00; background: black; padding: 10px; border-radius: 8px;"></div>
-        </section>
-
-        <section class="panel">
-            <h2>Network Recon</h2>
-            <div class="info-row" style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="color:var(--neon-green)">Target IP:</span> <span id="ip">Scanning...</span></div>
-            <div class="scanner-circle"><div class="scanner-line"></div></div>
-            <p style="text-align:center; font-size:0.8rem; color:var(--electric-blue);">Scanning Open Ports...</p>
-        </section>
-
-        <section class="panel">
-            <h2>Apex Predator Rankings</h2>
-            <div id="leaderboard">
-                <div class="leaderboard-row"><span class="rank">#1</span><span>RK_Shield</span><span style="color:var(--neon-green);">10.5M pts</span></div>
-                <div class="leaderboard-row"><span class="rank" style="color:#aaa">#2</span><span>Silent_Ghost</span><span style="color:#aaa">8.2M pts</span></div>
-                <div class="leaderboard-row"><span class="rank" style="color:#aaa">#3</span><span>Shadow_Walker</span><span style="color:#aaa">5.1M pts</span></div>
+            <h2 style="color: var(--neon);">Advanced Pentesting</h2>
+            <p style="font-size: 0.85rem; margin: 15px 0; color: #ccc;">আমরা আপনার সার্ভার বা ওয়েবসাইটের গভীর নিরাপত্তা ত্রুটি খুঁজে বের করে রিপোর্ট প্রদান করি।</p>
+            <div class="service-box">
+                <span class="price-tag">Starting ৳2,500</span>
+                <button class="btn-hire" onclick="openChat()">REQUEST AUDIT</button>
             </div>
         </section>
+
+        <section class="panel">
+            <h2 style="color: var(--blue);">Deep OSINT Analysis</h2>
+            <p style="font-size: 0.85rem; margin: 15px 0; color: #ccc;">টার্গেটের ডিজিটাল ফুটপ্রিন্ট এবং লিক হওয়া ডাটা এনালাইসিস করে সিকিউরিটি রিপোর্ট তৈরি করি।</p>
+            <div class="service-box" style="border-color: var(--blue);">
+                <span class="price-tag" style="color: var(--blue);">Starting ৳1,500</span>
+                <button class="btn-hire" style="background: var(--blue);" onclick="openChat()">START RECON</button>
+            </div>
+        </section>
+
+        <div id="chat-widget">
+            <div class="chat-header">
+                <span>🛡️ RK-SHIELD LIVE SUPPORT</span>
+                <span onclick="closeChat()" style="cursor:pointer;">[X]</span>
+            </div>
+            <div class="chat-body" id="chat-msgs">
+                <p style="color: yellow;">> System: Secure tunnel established...</p>
+                <p>> RK: স্বাগতম! আমি RK। আপনি কোন সার্ভিসটি সম্পর্কে জানতে চান? সরাসরি এখানে মেসেজ দিন।</p>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="user-msg" placeholder="Type your query..." onkeypress="if(event.key==='Enter') sendMsg()">
+                <button class="btn-send" onclick="sendMsg()">SEND</button>
+            </div>
+        </div>
     </main>
 
-    <div id="hidden-admin" onclick="alert('ADMIN ACCESS REQUIRED!')"></div>
-
-    <footer onclick="playWarning()">
-        <p>© 2026 kumedofficial.online | RK-SHIELD GLOBAL DOMINATION</p>
-        <p style="font-size: 0.7rem; color: var(--danger-red); margin-top: 10px; animation: flicker 1s infinite;">[ SECURE ACCESS GRANTED ]</p>
+    <footer style="text-align: center; padding: 40px; border-top: 1px solid #222; margin-top: 50px; font-size: 0.8rem; color: #666;">
+        <p>© 2026 kumedofficial.online | RK-SHIELD GLOBAL OPERATIONS</p>
+        <p style="color: var(--neon); margin-top: 10px;">[ STATUS: OPERATIONAL ]</p>
     </footer>
 
     <script>
-        // আইপি ডাটা
-        fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
-            document.getElementById('ip').innerText = data.ip;
-        });
-
-        // ম্যাট্রিক্স রেইন
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const drops = Array(Math.floor(canvas.width / 10)).fill(1);
-        function draw() {
-            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#0F0"; drops.forEach((y,i) => {
-                ctx.fillText(String.fromCharCode(Math.random()*128), i*10, y*10);
-                if(y*10 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            });
-        }
-        setInterval(draw, 50);
-
-        // সিস্টেম বুট ও ভয়েস
-        function bootApexSystem() {
+        function startSystem() {
             document.getElementById('auth-overlay').style.display = 'none';
-            
-            // মেইন ভয়েস
-            const msg = new SpeechSynthesisUtterance("Welcome RK. Apex Predator mode is initialized. All global nodes are under your command on kumed official dot online. Prepare for domination.");
-            msg.rate = 0.85; msg.pitch = 0.7;
+            const msg = new SpeechSynthesisUtterance("Welcome back RK. Shield services and secure chat nodes are now operational. Standing by for client requests.");
+            msg.rate = 0.9;
             window.speechSynthesis.speak(msg);
-            
-            startLogs();
-            startRansomSim();
         }
 
-        // লগস এনিমেশন
-        function startLogs() {
-            const logsBox = document.getElementById('logs');
-            const phrases = ["> Bypass Firewall [SUCCESS]", "> Root Access: GRANTED", "> Encrypting Target Database...", "> Injecting Apex Payload...", "> Sat Link established.", "> RK-ULTRA V5.0 DEPLOYED.", "> Standing by for command..."];
-            setInterval(() => {
-                let p = document.createElement('p');
-                p.innerText = "> " + phrases[Math.floor(Math.random()*phrases.length)];
-                logsBox.appendChild(p);
-                if(logsBox.children.length > 12) logsBox.removeChild(logsBox.firstChild);
-            }, 1000);
+        function openChat() {
+            document.getElementById('chat-widget').style.display = 'flex';
+            // চ্যাট খুললে একটা অটো মেসেজ
+            const msgs = document.getElementById('chat-msgs');
+            msgs.innerHTML += `<p style="color: #00d4ff; margin-top: 10px;">> System: Client interested in Service Audit. Initiating chat...</p>`;
         }
 
-        // Ransomware সিমুলেশন
-        function startRansomSim() {
-            let prog = 0;
-            const bar = document.getElementById('ransom-progress');
-            setInterval(() => {
-                if(prog < 100) { prog += 0.5; bar.style.width = prog + '%'; }
-                else { prog = 0; }
-            }, 100);
+        function closeChat() {
+            document.getElementById('chat-widget').style.display = 'none';
         }
 
-        // ফুটার ক্লিক করলে ওয়ার্নিং ভয়েস
-        function playWarning() {
-            const msg = new SpeechSynthesisUtterance("Warning. Unauthorized access will be traced and destroyed.");
-            msg.rate = 1; msg.pitch = 0.5;
-            window.speechSynthesis.speak(msg);
+        function sendMsg() {
+            const input = document.getElementById('user-msg');
+            const msgs = document.getElementById('chat-msgs');
+            if(input.value.trim() !== "") {
+                msgs.innerHTML += `<p style="color:#fff; margin-top: 5px;">> You: ${input.value}</p>`;
+                const currentMsg = input.value;
+                input.value = "";
+                
+                // হ্যাকার স্টাইল অটো রিপ্লাই
+                setTimeout(() => {
+                    msgs.innerHTML += `<p style="color: var(--neon); margin-top: 5px;">> RK: আপনার মেসেজটি পেয়েছি। আমি বর্তমানে একটি সিকিউরিটি অডিটে ব্যস্ত আছি। আপনি আপনার ডিটেইলস এখানে লিখে রাখুন, আমি দ্রুত আপনার সাথে ডিল ফাইনাল করছি।</p>`;
+                    msgs.scrollTop = msgs.scrollHeight;
+                }, 1500);
+            }
         }
     </script>
+
+
 </body>
 </html>
