@@ -3,314 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK-SHIELD | CYBER SECURITY ENGINE v5.0</title>
+    <title>RK-SHIELD | ULTIMATE SECURITY v6.0</title>
     <style>
-        /* প্রিমিয়াম ডার্ক থিম, ম্যাট্রিক্স রেইন এবং অ্যানিমেশন */
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
 
         :root {
-            --primary: #00ff00; /* Neon Green */
-            --background: #000000;
-            --background-alt: #0a0a0a;
-            --text: #c0c0c0;
-            --warning: #ffcc00;
-            --danger: #ff0000;
+            --neon-green: #00ff41;
+            --neon-red: #ff003c;
+            --dark: #050505;
+            --panel-bg: rgba(10, 10, 10, 0.9);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
+            background-color: var(--dark);
+            color: white;
             font-family: 'Fira Code', monospace;
-            background-color: var(--background);
-            color: var(--text);
-            overflow: hidden; /* ম্যাট্রিক্স রেইনের জন্য স্ক্রল বন্ধ */
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            position: relative;
         }
 
-        /* ১. ম্যাট্রিক্স রেইন ক্যানভাস */
-        #matrix-canvas {
+        /* ম্যাট্রিক্স ব্যাকগ্রাউন্ড */
+        #bg-canvas {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; /* কন্টেন্টের পেছনে থাকবে */
-            opacity: 0.15; /* খুব হালকা থাকবে যাতে কন্টেন্ট পড়া যায় */
+            top: 0; left: 0; z-index: -1;
+            opacity: 0.1;
         }
 
-        /* হেডার */
         header {
-            background-color: rgba(10, 10, 10, 0.9);
-            padding: 20px;
-            border-bottom: 2px solid var(--primary);
+            padding: 25px;
             text-align: center;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-            z-index: 10;
+            border-bottom: 3px solid var(--neon-green);
+            background: var(--panel-bg);
+            box-shadow: 0 0 25px var(--neon-green);
+            z-index: 100;
         }
 
         header h1 {
-            color: var(--primary);
-            font-size: 2.8rem;
-            text-shadow: 0 0 15px var(--primary);
-            animation: textFlicker 1.5s infinite alternate;
+            font-size: 3rem;
+            color: var(--neon-green);
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px var(--neon-green);
+            animation: flicker 2s infinite;
         }
 
-        header p { font-size: 1rem; opacity: 0.8; margin-top: 5px; color: #fff; }
+        .news-ticker {
+            background: #ff0000;
+            color: white;
+            padding: 5px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
 
-        /* মেইন কন্টেন্ট */
         main {
-            flex: 1;
-            padding: 30px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            max-width: 1500px;
+            margin: auto;
             z-index: 10;
-            overflow-y: auto; /* কন্টেন্ট স্ক্রল করা যাবে */
         }
 
-        /* প্যানেল স্টাইল */
         .panel {
-            background-color: rgba(10, 10, 10, 0.9);
-            border: 1px solid rgba(0, 255, 0, 0.2);
-            border-radius: 5px;
-            padding: 25px;
-            transition: all 0.3s ease;
+            background: var(--panel-bg);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            padding: 20px;
             position: relative;
-            overflow: hidden;
+            transition: 0.3s;
+            border-radius: 5px;
         }
 
         .panel:hover {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
-            transform: translateY(-5px);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+            transform: scale(1.02);
         }
 
         .panel h2 {
-            color: var(--primary);
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 255, 0, 0.4);
-            padding-bottom: 8px;
+            color: var(--neon-green);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--neon-green);
+            padding-left: 10px;
+        }
+
+        /* আইপি ডাটা বক্স */
+        .info-row {
+            margin-bottom: 10px;
             display: flex;
-            align-items: center;
-        }
-
-        .panel h2::before {
-            content: "> ";
-            margin-right: 8px;
-            animation: blink 1s infinite;
-        }
-
-        /* আইপি ট্র্যাকার ডাটা */
-        .data-item { color: var(--warning); font-weight: bold; margin-right: 8px; }
-        .data-value { color: #fff; }
-
-        /* ডেমো টার্মিনাল */
-        #terminal {
-            height: 200px;
-            overflow-y: auto;
-            font-size: 0.85rem;
-            color: #fff;
-            scrollbar-width: thin;
-            padding-right: 10px;
-        }
-        #terminal span { display: block; margin-bottom: 5px; }
-        .cmd-cmd { color: var(--primary); }
-        .cmd-res { color: var(--warning); opacity: 0.9; }
-        .cmd-err { color: var(--danger); }
-
-        /* সাব-ডোমেইন স্ক্যানার */
-        #scan-box {
-            text-align: center;
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            padding: 15px;
-            color: #fff;
-            animation: scanBorder 2s infinite;
-        }
-        #scan-box span { animation: blink 0.8s infinite; }
-
-        /* ম্যানুয়াল এনালাইসিস বক্স */
-        .target-box {
-            text-align: center;
-            border: 2px dashed rgba(0, 255, 0, 0.3);
-            padding: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .target-box:hover {
-            border-color: var(--primary);
-            background-color: rgba(0, 255, 0, 0.05);
-        }
-        .target-box h3 { color: #fff; }
-        .target-box p { font-size: 0.9rem; opacity: 0.8; margin-top: 8px; }
-
-        /* ফুটার */
-        footer {
-            background-color: rgba(10, 10, 10, 0.9);
-            padding: 15px;
-            text-align: center;
-            border-top: 2px solid var(--primary);
+            justify-content: space-between;
             font-size: 0.9rem;
-            z-index: 10;
         }
 
-        /* অ্যানিমেশনসমূহ */
-        @keyframes textFlicker {
-            0% { opacity: 0.1; text-shadow: 0 0 10px rgba(0, 255, 0, 0); }
-            5% { opacity: 0.5; text-shadow: 0 0 15px rgba(0, 255, 0, 0.5); }
-            10% { opacity: 1; text-shadow: 0 0 20px rgba(0, 255, 0, 1); }
-            100% { opacity: 1; text-shadow: 0 0 10px rgba(0, 255, 0, 0.5); }
+        .label { color: var(--neon-green); }
+        .value { color: #fff; font-weight: bold; }
+
+        /* টার্মিনাল ডিজাইন */
+        #terminal-box {
+            height: 200px;
+            background: black;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+            color: #00ff00;
+            border: 1px solid #333;
         }
 
-        @keyframes blink { 50% { opacity: 0; } }
-
-        @keyframes scanBorder {
-            0%, 100% { border-color: rgba(255, 0, 0, 0.3); }
-            50% { border-color: rgba(255, 0, 0, 1); box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+        /* অ্যানিমেশন */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
-        /* রেসপন্সিভ */
-        @media (max-width: 600px) {
-            header h1 { font-size: 2rem; }
-            main { padding: 15px; }
-            .panel { padding: 15px; }
+        marquee { font-size: 0.9rem; color: #ff0000; }
+
+        footer {
+            background: var(--panel-bg);
+            padding: 20px;
+            text-align: center;
+            border-top: 2px solid var(--neon-green);
+            margin-top: auto;
+        }
+
+        .btn-scan {
+            background: none;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 10px 20px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .btn-scan:hover {
+            background: var(--neon-green);
+            color: black;
         }
     </style>
 </head>
 <body>
-    <canvas id="matrix-canvas"></canvas>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="news-ticker">
+        <marquee behavior="scroll" direction="left">
+            [BREAKING] NEW ZERO-DAY EXPLOIT DETECTED | [SYSTEM] RK-ULTRA V5.0 DEPLOYED | [WARNING] BREACH DATA UPDATED 2026
+        </marquee>
+    </div>
 
     <header>
-        <h1>RK-SHIELD</h1>
-        <p>CYBER SECURITY ENGINE v5.0 | Codename: ULTRA-PRO</p>
+        <h1>RK-SHIELD v6.0</h1>
+        <p>ADVANCED CYBER INTELLIGENCE & RECONNAISSANCE</p>
     </header>
 
     <main>
         <section class="panel">
-            <h2>Visitor Profile (Live)</h2>
-            <div id="ip-data">
-                <p><span class="data-item">IP Address:</span><span id="ip-val" class="data-value">Loading...</span></p>
-                <p><span class="data-item">City/Target:</span><span id="city-val" class="data-value">Wait...</span></p>
-                <p><span class="data-item">Country:</span><span id="country-val" class="data-value">Wait...</span></p>
-                <p><span class="data-item">Internet Provider (ISP):</span><span id="isp-val" class="data-value">Wait...</span></p>
+            <h2>Live Reconnaissance</h2>
+            <div class="info-row"><span class="label">IP Addr:</span> <span class="value" id="ip">Scanning...</span></div>
+            <div class="info-row"><span class="label">Location:</span> <span class="value" id="loc">Wait...</span></div>
+            <div class="info-row"><span class="label">ISP:</span> <span class="value" id="isp">Wait...</span></div>
+            <div class="info-row"><span class="label">Browser:</span> <span class="value" id="ua">Wait...</span></div>
+        </section>
+
+        <section class="panel">
+            <h2>Core Command Terminal</h2>
+            <div id="terminal-box">
+                <p>> RK-SHIELD Kernel v6.0.2 Loaded...</p>
+                <p>> Initializing Sub-domain Hunter...</p>
+                <div id="live-console"></div>
             </div>
         </section>
 
         <section class="panel">
-            <h2>Termux Terminal</h2>
-            <div id="terminal">
-                <span class="cmd-cmd">root@RK-shield:~# system_init --ultra-pro v5.0</span>
-                <span class="cmd-res">[OK] Kernel Loaded</span>
-                <span class="cmd-res">[OK] Sub-domain Scanner Active</span>
-                <span class="cmd-res">[WARNING] Breach DB: 105.2M records online</span>
-                <span class="cmd-cmd">root@RK-shield:~# </span>
-            </div>
-        </section>
-
-        <section class="panel">
-            <h2>Sub-Domain Scanner</h2>
-            <div id="scanner">
-                <div id="scan-box">
-                    <span>Scanning target...</span>
-                </div>
-            </div>
-        </section>
-
-        <section class="panel">
-            <h2>Manual Analysis</h2>
-            <div class="target-box" onclick="alert('Target Analysis Initiated!')">
-                <h3>Submit New Target</h3>
-                <p>Click to provide domain or IP for deep scan.</p>
-            </div>
+            <h2>Database Scanner</h2>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Check if target is compromised in 2026 breach list.</p>
+            <input type="text" placeholder="Enter target domain..." style="width:100%; padding:10px; margin-top:10px; background:black; border:1px solid #333; color:lime;">
+            <button class="btn-scan" onclick="startScan()">INITIATE DEEP SCAN</button>
         </section>
     </main>
 
     <footer>
-        <p>© 2026 | RK-SHIELD Security Solutions | <span style="color:var(--primary);">kumedofficial.online</span></p>
+        <p>SYSTEM STATUS: <span id="status" style="color:var(--neon-green);">ONLINE</span> | SECURE ACCESS GRANTED</p>
+        <p style="font-size: 0.7rem; margin-top: 10px; opacity: 0.5;">Developed by RK for kumedofficial.online</p>
     </footer>
 
     <script>
-        // ১. ম্যাট্রিক্স রেইন স্ক্রিপ্ট
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
-
-        canvas.height = window.innerHeight;
-        canvas.width = window.innerWidth;
-
-        const matrixChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%";
-        const characters = matrixChars.split("");
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-
-        for (let x = 0; x < columns; x++) drops[x] = 1;
-
-        function drawMatrix() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.04)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = "#0F0"; // Green text
-            ctx.font = fontSize + "px arial";
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = characters[Math.floor(Math.random() * characters.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
-        }
-        setInterval(drawMatrix, 35);
-
-        // ২. রিয়াল আইপি ট্র্যাকার স্ক্রিপ্ট
+        // আইপি ও ব্রাউজার ডিটেইলস
+        document.getElementById('ua').innerText = navigator.platform;
         fetch('https://ipapi.co/json/')
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
-                document.getElementById('ip-val').innerText = data.ip;
-                document.getElementById('city-val').innerText = data.city;
-                document.getElementById('country-val').innerText = data.country_name;
-                document.getElementById('isp-val').innerText = data.org;
-            })
-            .catch(error => {
-                document.getElementById('ip-val').innerText = 'Error';
+                document.getElementById('ip').innerText = data.ip;
+                document.getElementById('loc').innerText = data.city + ", " + data.country_name;
+                document.getElementById('isp').innerText = data.org;
             });
 
-        // ৩. টার্মিনাল অ্যানিমেশন
-        const terminal = document.getElementById('terminal');
-        const commands = [
-            "starting sub-domain scan...",
-            "target: google.com",
-            "scanning: api.google.com...",
-            "scanning: stats.google.com...",
-            "finding vulnerabilities...",
-            "[OK] Vulnerability found in old server!",
-            "generating report...",
-            "starting payload delivery...",
-            "[OK] Payload delivered successfully."
+        // ম্যাট্রিক্স রেইন ব্যাকগ্রাউন্ড
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const letters = "RKSHIELD0101".split("");
+        const fontSize = 10;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0,0,0,0.05)";
+            ctx.fillRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "#0F0";
+            drops.forEach((y, i) => {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, i * fontSize, y * fontSize);
+                if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(drawMatrix, 50);
+
+        // লাইভ টার্মিনাল অ্যানিমেশন
+        const consoleBox = document.getElementById('live-console');
+        const logs = [
+            "Bypassing firewall [SSL:ENABLED]",
+            "Injecting payload to port 443...",
+            "Subdomain found: admin.internal.sec",
+            "Checking database vulnerabilities...",
+            "Access granted to directory /etc/shadow",
+            "Scanning for hidden API endpoints..."
         ];
-        let i = 0;
+        let count = 0;
         setInterval(() => {
-            if (i < commands.length) {
-                const span = document.createElement('span');
-                span.classList.add(i % 3 === 0 ? 'cmd-res' : 'cmd-cmd');
-                span.innerHTML = `root@RK-shield:~# ${commands[i]}`;
-                terminal.appendChild(span);
-                terminal.scrollTop = terminal.scrollHeight;
-                i++;
-            } else { i = 0; terminal.innerHTML = ""; } // Reset
-        }, 2500);
+            const p = document.createElement('p');
+            p.innerText = "> " + logs[count % logs.length];
+            consoleBox.appendChild(p);
+            if(consoleBox.children.length > 8) consoleBox.removeChild(consoleBox.firstChild);
+            count++;
+        }, 2000);
 
-        // ৪. লাইভ স্ক্যানার অ্যানিমেশন
-        const scanBox = document.getElementById('scan-box');
-        let scanIndex = 0;
-        const scanTextList = ['Scanning.','Scanning..','Scanning...','Hacking.','Hacking..','Hacking...'];
-        setInterval(() => {
-            scanBox.innerHTML = `<span>${scanTextList[scanIndex]}</span>`;
-            scanIndex = (scanIndex + 1) % scanTextList.length;
-        }, 600);
-
+        function startScan() {
+            alert("TARGET DATA ANALYSIS STARTED! CHECK TERMINAL LOGS.");
+        }
     </script>
 </body>
 </html>
