@@ -3,134 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK-SHIELD | GOD-EYE v18.0</title>
+    <title>RK-SHIELD | MASTER v19.0</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;700&display=swap');
         :root { --neon: #00ff41; --danger: #ff003c; --blue: #00d4ff; --purple: #bc13fe; }
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
         body { background: #000; color: white; font-family: 'Fira Code', monospace; overflow: hidden; }
 
-        /* হেডার ও গ্রিড */
-        header { padding: 20px; text-align: center; border-bottom: 2px solid var(--neon); background: #050505; z-index: 10; position: relative; }
-        .title { font-size: 2rem; color: var(--neon); text-shadow: 0 0 15px var(--neon); letter-spacing: 5px; }
+        /* হেডার */
+        header { padding: 15px; text-align: center; border-bottom: 2px solid var(--neon); background: #050505; position: relative; z-index: 10; }
+        .title { font-size: 1.8rem; color: var(--neon); text-shadow: 0 0 10px var(--neon); letter-spacing: 3px; }
 
-        /* টুলস কন্টেইনার */
-        .main-layout { display: flex; height: calc(100vh - 80px); }
-        
-        .tool-sidebar { width: 300px; background: #0a0a0a; border-right: 1px solid #222; overflow-y: auto; padding: 10px; }
-        .tool-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid #1a1a1a; color: #888; text-align: left; margin-bottom: 5px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
-        .tool-btn:hover { border-color: var(--neon); color: var(--neon); background: rgba(0,255,65,0.05); }
-        .tool-btn.active { border-color: var(--blue); color: var(--blue); background: rgba(0, 212, 255, 0.1); }
+        /* ড্যাশবোর্ড লেআউট */
+        .main-layout { display: flex; height: calc(100vh - 65px); }
+        .tool-sidebar { width: 250px; background: #080808; border-right: 1px solid #222; overflow-y: auto; padding: 10px; }
+        .tool-btn { width: 100%; padding: 10px; background: transparent; border: 1px solid #1a1a1a; color: #666; text-align: left; margin-bottom: 5px; cursor: pointer; font-size: 0.75rem; }
+        .tool-btn:hover, .tool-btn.active { border-color: var(--neon); color: var(--neon); background: rgba(0,255,65,0.05); }
 
-        /* মেইন টার্মিনাল এরিয়া */
-        .terminal-area { flex: 1; padding: 20px; display: flex; flex-direction: column; background: radial-gradient(circle, #0a0a0a 0%, #000 100%); }
-        #console { flex: 1; background: rgba(0,0,0,0.8); border: 1px solid #333; border-radius: 10px; padding: 20px; overflow-y: auto; font-size: 0.9rem; color: var(--neon); box-shadow: inset 0 0 30px #000; }
-        
-        /* লাইসেন্স পপআপ */
-        #license-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; background: #0a0a0a; border: 2px solid var(--purple); padding: 30px; border-radius: 15px; display: none; z-index: 1000; text-align: center; box-shadow: 0 0 100px var(--purple); }
-        .key-input { width: 100%; padding: 10px; background: #000; border: 1px solid var(--purple); color: #fff; margin: 20px 0; text-align: center; font-size: 1.2rem; }
-        .btn-unlock { background: var(--purple); border: none; padding: 10px 30px; color: #fff; font-weight: bold; cursor: pointer; }
+        .terminal-area { flex: 1; padding: 15px; display: flex; flex-direction: column; background: #000; position: relative; }
+        #console { flex: 1; background: rgba(0,0,0,0.9); border: 1px solid #222; border-radius: 5px; padding: 15px; overflow-y: auto; font-size: 0.85rem; color: var(--neon); line-height: 1.5; }
 
-        .status-bar { padding: 10px; background: #111; display: flex; justify-content: space-between; font-size: 0.7rem; color: #555; border-top: 1px solid #222; }
+        /* কাস্টম মাস্টার পপ-আপ (সাদা বক্সের বদলে এটি আসবে) */
+        #custom-alert {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 320px; background: #0a0a0a; border: 2px solid var(--purple);
+            padding: 25px; border-radius: 10px; display: none; z-index: 2000;
+            text-align: center; box-shadow: 0 0 50px var(--purple);
+            animation: popIn 0.3s ease-out;
+        }
+        .key-input { width: 100%; padding: 10px; background: #000; border: 1px solid var(--purple); color: #fff; margin: 15px 0; text-align: center; font-family: 'Fira Code'; }
+        .btn-unlock { background: var(--purple); border: none; padding: 10px 20px; color: #fff; font-weight: bold; cursor: pointer; width: 100%; border-radius: 3px; }
+
+        /* গ্রাফিক এনিমেশন */
+        @keyframes popIn { from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+        .status-bar { padding: 8px; background: #0a0a0a; display: flex; justify-content: space-between; font-size: 0.65rem; color: #444; border-top: 1px solid #111; }
     </style>
 </head>
-<body onclick="initAudio()">
+<body onclick="startVoice()">
 
     <header>
         <div class="title">RK-SHIELD OMNI-CONTROL</div>
-        <div id="target-ip" style="font-size: 0.7rem; color: var(--blue);">SYSTEM STATUS: STANDBY</div>
     </header>
 
     <div class="main-layout">
-        <div class="tool-sidebar" id="sidebar">
-            </div>
-        
+        <div class="tool-sidebar" id="sidebar"></div>
         <div class="terminal-area">
             <div id="console">
-                <p>> [SYSTEM] Welcome Supreme Commander RK...</p>
-                <p>> [SYSTEM] All 50+ Interstellar nodes are ready for deployment.</p>
-                <p>> [SYSTEM] Select a tool from the sidebar to begin operation.</p>
+                <p>> [SYSTEM] Waiting for Master Authorization...</p>
+                <p>> [SYSTEM] Use Master Key for God-Mode Access.</p>
             </div>
-            
             <div class="status-bar">
-                <span>CPU: 0.02% | LATENCY: 14ms | ENCRYPTION: AES-512</span>
+                <span>SECURE_TUNNEL: ACTIVE | RK-CORE: v19.0</span>
                 <span id="clock">00:00:00</span>
             </div>
         </div>
     </div>
 
-    <div id="license-popup">
-        <h2 style="color: var(--purple);">LICENSE REQUIRED</h2>
-        <p style="font-size: 0.8rem; color: #aaa; margin-top: 10px;">The tool you selected is a Premium Enterprise Grade exploit. Please enter your RK-License Key to continue.</p>
-        <input type="text" class="key-input" id="key-val" placeholder="XXXX-XXXX-XXXX">
-        <button class="btn-unlock" onclick="checkKey()">UNLOCK TOOL</button>
-        <p style="margin-top: 15px; font-size: 0.7rem;">Contact <span style="color:var(--neon)">@RK_ADMIN</span> for keys.</p>
+    <div id="custom-alert">
+        <h3 id="alert-title" style="color: var(--purple); font-size: 1rem;">LICENSE REQUIRED</h3>
+        <p id="alert-msg" style="font-size: 0.7rem; color: #888; margin-top: 10px;">This tool is locked. Enter Master Key.</p>
+        <input type="text" class="key-input" id="key-val" placeholder="ENTER MASTER KEY">
+        <button class="btn-unlock" onclick="verifyMasterKey()">AUTHENTICATE</button>
+        <p style="margin-top: 10px; font-size: 0.6rem; color: var(--neon); cursor: pointer;" onclick="closeAlert()">[ CANCEL ]</p>
     </div>
 
     <script>
-        const tools = ["Sat-Ping", "Zero-Day Explorer", "Neural-Sniffer", "Bio-Metric Bypass", "Quantum-Key", "Dark-Crawler", "SQL-Auto", "IP-Vanish", "Cloud-Cracker", "Deep-Fake Scan", "Ghost-Mode", "Brute-Force AI", "Proxy-Chain", "MAC-Spoofer", "SSL-Stripper", "XSS-Hunter", "Packet-Intercepter", "RAM-Scraper", "Kernel-Exploit", "DDoS-Shield", "Backdoor-Gen", "Payload-Deployer", "Rootkit-Scan", "DNS-Poisoner", "Wifi-jammer", "RFID-Clone", "Signal-Interference", "Logic-Bomb", "Spy-Cam Scan", "Data-Wiper", "Meta-Sploit V9", "Ransom-Shield", "I2P-Router", "Tor-Bridge", "Onion-Search", "Crypto-Tracker", "NFT-Authenticator", "Smart-Contract Audit", "Blockchain-Scan", "VPS-Rooter", "Firewall-Evasion", "Phish-Detector", "Keylog-Hunter", "Stealth-Shell", "Botnet-Control", "Honey-Pot Gen", "Reverse-Engineer", "ASM-Decoder", "Buffer-Overflow", "Zero-Knowledge Proof"];
+        const tools = ["Sat-Ping", "Zero-Day Explorer", "Neural-Sniffer", "Bio-Metric Bypass", "Quantum-Key", "Dark-Crawler", "SQL-Auto", "IP-Vanish", "Cloud-Cracker", "Deep-Fake Scan", "Ghost-Mode", "Proxy-Chain", "MAC-Spoofer", "SSL-Stripper", "XSS-Hunter", "Packet-Intercepter", "RAM-Scraper", "Kernel-Exploit", "DDoS-Shield", "Backdoor-Gen", "Payload-Deployer", "Rootkit-Scan", "DNS-Poisoner", "Wifi-jammer", "RFID-Clone", "Signal-Interference", "Logic-Bomb", "Data-Wiper", "Meta-Sploit V9", "Ransom-Shield", "I2P-Router", "Tor-Bridge", "Onion-Search", "Crypto-Tracker", "NFT-Authenticator", "Smart-Contract Audit", "Blockchain-Scan", "VPS-Rooter", "Firewall-Evasion", "Phish-Detector", "Keylog-Hunter", "Stealth-Shell", "Botnet-Control", "Honey-Pot Gen", "Reverse-Engineer", "ASM-Decoder", "Buffer-Overflow", "Zero-Knowledge Proof"];
         
         const sidebar = document.getElementById('sidebar');
         const consoleBox = document.getElementById('console');
-        let selectedTool = "";
+        let currentTool = "";
 
-        // টুল জেনারেশন
         tools.forEach(t => {
             const btn = document.createElement('button');
             btn.className = 'tool-btn';
             btn.innerText = `> ${t.toUpperCase()}`;
-            btn.onclick = () => runTool(t, btn);
+            btn.onclick = () => {
+                currentTool = t;
+                showAlert();
+            };
             sidebar.appendChild(btn);
         });
 
-        function runTool(name, btn) {
-            // বাটন হাইলাইট
-            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            selectedTool = name;
-
-            // টার্মিনাল ক্লিয়ার ও নতুন কমান্ড
-            consoleBox.innerHTML += `<p style="color: var(--blue); margin-top:10px;">> EXECUTING: ${name}...</p>`;
-            
-            // রিয়েল টাইম ইফেক্ট
-            setTimeout(() => {
-                if(name === "IP-Vanish") {
-                    fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => {
-                        writeToConsole(`[SUCCESS] Proxy tunnel created at IP: ${d.ip}`);
-                        writeToConsole(`[STATUS] Your identity is now hidden.`);
-                    });
-                } else {
-                    // প্রিমিয়াম টুলের জন্য পপআপ
-                    document.getElementById('license-popup').style.display = 'block';
-                    writeToConsole(`[WARNING] Access Denied. Encryption level too high.`);
-                }
-            }, 800);
+        function showAlert() {
+            document.getElementById('custom-alert').style.display = 'block';
+            document.getElementById('key-val').focus();
         }
 
-        function writeToConsole(text) {
-            const p = document.createElement('p');
-            p.innerText = `> ${text}`;
-            consoleBox.appendChild(p);
-            consoleBox.scrollTop = consoleBox.scrollHeight;
+        function closeAlert() {
+            document.getElementById('custom-alert').style.display = 'none';
         }
 
-        function checkKey() {
+        function verifyMasterKey() {
             const key = document.getElementById('key-val').value;
-            if(key === "RK-PRO-2026") {
-                alert("ACCESS GRANTED!");
-                document.getElementById('license-popup').style.display = 'none';
-                writeToConsole(`[SYSTEM] ${selectedTool} UNLOCKED. Running exploits...`);
+            // তোমার গোপন মাস্টার কি: RK-MASTER-GOD-99
+            if(key === "RK-MASTER-GOD-99") {
+                closeAlert();
+                executeTool(currentTool);
             } else {
-                alert("INVALID LICENSE KEY! Contact RK Admin.");
+                document.getElementById('alert-title').innerText = "ACCESS DENIED";
+                document.getElementById('alert-title').style.color = "red";
+                setTimeout(() => {
+                    document.getElementById('alert-title').innerText = "LICENSE REQUIRED";
+                    document.getElementById('alert-title').style.color = "var(--purple)";
+                }, 1000);
             }
         }
 
-        function initAudio() {
-            const msg = new SpeechSynthesisUtterance("God-Eye system online. Fifty tools ready. Monitoring global grid.");
+        function executeTool(name) {
+            consoleBox.innerHTML += `<p style="color: var(--blue); margin-top: 10px;">> [MASTER_AUTH] Access Granted for ${name}...</p>`;
+            consoleBox.innerHTML += `<p style="color: #fff;">> Initializing ${name} core protocols...</p>`;
+            
+            let i = 0;
+            const sim = [
+                `Connecting to remote node... [OK]`,
+                `Bypassing firewall layers... [OK]`,
+                `Extracting target metadata... [OK]`,
+                `Task completed successfully.`
+            ];
+            
+            const interval = setInterval(() => {
+                if(i < sim.length) {
+                    const p = document.createElement('p');
+                    p.innerText = `> ${sim[i]}`;
+                    consoleBox.appendChild(p);
+                    consoleBox.scrollTop = consoleBox.scrollHeight;
+                    i++;
+                } else { clearInterval(interval); }
+            }, 800);
+        }
+
+        function startVoice() {
+            const msg = new SpeechSynthesisUtterance("R K Shield v19 Master access online. Custom UI loaded.");
             msg.rate = 0.9; window.speechSynthesis.speak(msg);
         }
 
-        // ক্লক ফাংশন
         setInterval(() => {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString();
         }, 1000);
