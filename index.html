@@ -3,155 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK-SHIELD | SUBSCRIPTION PRO v9.0</title>
+    <title>RK-SHIELD | AUDIO FIXED v9.5</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
-        :root { --neon: #00ff41; --bg: #000; --danger: #ff003c; --gold: #ffd700; }
+        :root { --neon: #00ff41; --bg: #000; --danger: #ff003c; }
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
-        body { background: var(--bg); color: white; font-family: 'Fira Code', monospace; overflow-x: hidden; }
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.1; }
-
-        /* এন্ট্রি স্ক্রিন */
-        #welcome-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; text-align: center; border: 2px solid var(--neon); }
+        body { background: var(--bg); color: white; font-family: 'Fira Code', monospace; overflow: hidden; }
         
-        header { padding: 30px; text-align: center; border-bottom: 2px solid var(--neon); background: rgba(0,0,0,0.9); box-shadow: 0 0 20px var(--neon); }
-        .logo { font-size: 2.5rem; color: var(--neon); text-shadow: 0 0 10px var(--neon); font-weight: bold; }
+        /* এন্ট্রি গেট */
+        #welcome-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 9999; display: flex; 
+            align-items: center; justify-content: center; text-align: center;
+            border: 4px solid var(--neon);
+        }
+        .auth-btn {
+            padding: 20px 40px; border: 2px solid var(--neon); color: var(--neon);
+            font-size: 1.5rem; background: transparent; font-family: 'Fira Code';
+            box-shadow: 0 0 20px var(--neon); animation: pulse 1.5s infinite;
+        }
 
-        .ticker-wrap { background: var(--danger); color: white; padding: 5px; font-size: 0.8rem; overflow: hidden; }
+        #main-content { display: none; padding: 20px; }
+        header { text-align: center; border-bottom: 2px solid var(--neon); padding-bottom: 10px; }
+        .glitch { font-size: 2.5rem; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
 
-        main { padding: 20px; max-width: 1400px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        
-        .panel { background: rgba(15, 15, 15, 0.95); border: 1px solid #333; padding: 20px; border-radius: 10px; transition: 0.3s; }
-        .panel:hover { border-color: var(--neon); box-shadow: 0 0 15px rgba(0,255,65,0.2); }
-        .panel h2 { color: var(--neon); font-size: 1.1rem; margin-bottom: 15px; text-transform: uppercase; }
-
-        /* সাবস্ক্রিপশন কার্ড */
-        .price-card { background: #111; border: 1px solid #444; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
-        .price-card.pro { border-color: var(--gold); box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
-        .price-card h3 { color: var(--gold); margin-bottom: 10px; }
-        .price { font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
-        
-        .btn-buy { width: 100%; padding: 10px; background: var(--neon); color: #000; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; }
-        .btn-buy:hover { background: #fff; box-shadow: 0 0 15px #fff; }
-
-        /* সিকিউরিটি চেক বক্স */
-        .check-box { background: #050505; border: 1px dashed var(--neon); padding: 20px; text-align: center; grid-column: span 1; }
-        input { width: 80%; padding: 10px; background: #000; border: 1px solid #444; color: var(--neon); margin-bottom: 10px; outline: none; }
-
-        footer { text-align: center; padding: 30px; border-top: 1px solid #333; font-size: 0.8rem; opacity: 0.6; }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
-    <div id="welcome-overlay" onclick="bootSystem()">
-        <div style="animation: pulse 2s infinite;">
-            <h2 style="color:var(--neon); letter-spacing: 5px;">[ RK-SHIELD CORE ACTIVE ]</h2>
-            <p style="margin-top: 15px; color: #fff;">TAP TO AUTHENTICATE SUBSCRIPTION STATUS</p>
-        </div>
+    <div id="welcome-overlay">
+        <button class="auth-btn" onclick="unlockSystem()">[ AUTHENTICATE RK ]</button>
     </div>
 
-    <canvas id="bg-canvas"></canvas>
-
-    <div class="ticker-wrap">
-        <marquee>⚠️ ALERT: NEW DATABASE BREACH DETECTED (2026) | 🔴 SYSTEM MONITORING: ACTIVE | 🟢 SECURITY NODES: ONLINE | 🛡️ PROTECT YOUR DATA WITH RK-ULTRA V5.0</marquee>
+    <div id="main-content">
+        <header>
+            <h1 class="glitch">RK-SHIELD ONLINE</h1>
+            <p>> SYSTEM STATUS: <span style="color:var(--neon)">CONNECTED</span></p>
+        </header>
+        
+        <main style="margin-top: 30px; text-align: center;">
+            <div style="border: 1px solid var(--neon); padding: 40px; display: inline-block;">
+                <h2 style="color: var(--neon);">LIVE RECONNAISSANCE</h2>
+                <p id="status-text">> Initializing Audio Engine...</p>
+                <div id="logs" style="text-align: left; margin-top: 20px; color: #0f0; font-size: 0.9rem;"></div>
+            </div>
+        </main>
     </div>
 
-    <header>
-        <div class="logo">RK-SHIELD PRO</div>
-        <p style="font-size: 0.8rem; opacity: 0.8;">ELITE CYBER INTELLIGENCE ENGINE</p>
-    </header>
-
-    <main>
-        <section class="panel check-box">
-            <h2>Is Your Data Safe?</h2>
-            <p style="font-size: 0.8rem; margin-bottom: 15px; opacity: 0.8;">Check if your email is in our breach database.</p>
-            <input type="text" id="target-email" placeholder="Enter Email or Domain...">
-            <button class="btn-buy" style="background: var(--danger); color: #fff;" onclick="startCheck()">SCAN DATABASE</button>
-            <div id="check-result" style="margin-top: 15px; font-size: 0.8rem;"></div>
-        </section>
-
-        <section class="panel">
-            <h2>Subscription Plans</h2>
-            
-            <div class="price-card">
-                <h3>BASIC SHIELD</h3>
-                <div class="price">৳ 500 <span style="font-size:0.7rem;">/Month</span></div>
-                <p style="font-size:0.7rem; margin-bottom:10px;">• Basic OSINT Scan<br>• IP Leak Detection</p>
-                <button class="btn-buy" onclick="alert('Contact RK for Basic Plan')">GET STARTED</button>
-            </div>
-
-            <div class="price-card pro">
-                <h3>ULTRA PRO (Best)</h3>
-                <div class="price">৳ 1500 <span style="font-size:0.7rem;">/Month</span></div>
-                <p style="font-size:0.7rem; margin-bottom:10px;">• Deep Web Breach Monitoring<br>• 24/7 Attack Protection</p>
-                <button class="btn-buy" style="background: var(--gold);" onclick="alert('Contact RK for Ultra Pro Plan')">UPGRADE NOW</button>
-            </div>
-        </section>
-
-        <section class="panel">
-            <h2>Global Threat Map</h2>
-            <div id="logs" style="font-size: 0.75rem; height: 200px; overflow: hidden; color: #00ff00; background: #050505; padding: 10px; border: 1px solid #222;"></div>
-        </section>
-    </main>
-
-    <footer>
-        <p>© 2026 kumedofficial.online | RK-SHIELD Security Engine v9.0</p>
-        <p style="margin-top:10px; color:var(--neon);">Trusted by 500+ Security Experts</p>
-    </footer>
+    <audio id="beep-sound" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3" preload="auto"></audio>
 
     <script>
-        // আইপি ডাটা
-        fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
-            document.getElementById('check-result').innerHTML = `<span style="color:var(--neon)">Scanning from IP: ${data.ip}</span>`;
-        });
+        function unlockSystem() {
+            // ১. সাউন্ড ইফেক্ট বাজানো
+            const beep = document.getElementById('beep-sound');
+            beep.play().catch(e => console.log("Audio play blocked"));
 
-        // ম্যাট্রিক্স রেইন
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const drops = Array(Math.floor(canvas.width / 10)).fill(1);
-        function draw() {
-            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#0F0"; drops.forEach((y,i) => {
-                ctx.fillText(String.fromCharCode(Math.random()*128), i*10, y*10);
-                if(y*10 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            });
-        }
-        setInterval(draw, 50);
+            // ২. ভয়েস কমান্ড
+            const speech = new SpeechSynthesisUtterance();
+            speech.text = "System authentication successful. Welcome, R K. Shield mode is now active.";
+            speech.lang = 'en-US';
+            speech.rate = 0.9;
+            speech.pitch = 0.8;
+            window.speechSynthesis.speak(speech);
 
-        // বুট ও ভয়েস
-        function bootSystem() {
+            // ৩. ইন্টারফেস দেখানো
             document.getElementById('welcome-overlay').style.display = 'none';
-            const msg = new SpeechSynthesisUtterance("Welcome to RK Shield Subscription Portal. Monitoring active threats for your protection.");
-            msg.rate = 0.9; window.speechSynthesis.speak(msg);
+            document.getElementById('main-content').style.display = 'block';
+
+            startLogs();
         }
 
-        // সিকিউরিটি চেক সিমুলেশন
-        function startCheck() {
-            const email = document.getElementById('target-email').value;
-            const res = document.getElementById('check-result');
-            if(!email) { alert("Please enter email!"); return; }
-            res.innerHTML = "Searching Dark-Web Databases...";
-            res.style.color = "yellow";
-            setTimeout(() => {
-                res.innerHTML = "⚠️ WARNING: 5 Data Leaks Found for " + email + ". Upgrade to Ultra Pro to view full report.";
-                res.style.color = "red";
-            }, 3000);
+        function startLogs() {
+            const logs = document.getElementById('logs');
+            const data = [
+                "> Accessing Satellite...",
+                "> Encrypting Connection...",
+                "> RK-ULTRA V5.0 DEPLOYED.",
+                "> All Systems Operational."
+            ];
+            let i = 0;
+            setInterval(() => {
+                if(i < data.length) {
+                    logs.innerHTML += `<p>${data[i]}</p>`;
+                    i++;
+                }
+            }, 1000);
         }
-
-        // লাইভ থ্রেট লগস
-        const logsBox = document.getElementById('logs');
-        const threats = ["> Attempted SQL Injection: RU", "> DDoS Attack Blocked: USA", "> New Breach: 50k Emails Leaked", "> RK-ULTRA Scanning: Active", "> Firewall Status: 100% SECURE"];
-        setInterval(() => {
-            let p = document.createElement('p');
-            p.innerText = threats[Math.floor(Math.random()*threats.length)];
-            logsBox.appendChild(p);
-            if(logsBox.children.length > 10) logsBox.removeChild(logsBox.firstChild);
-        }, 1800);
-    </scr
-        ipt>
+    </script>
 </body>
 </html>
