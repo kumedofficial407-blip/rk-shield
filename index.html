@@ -1,107 +1,125 @@
-<l!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RK-SHIELD | GOD MODE v11.0</title>
+    <title>RK-SHIELD | APEX PREDATOR v12.0</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
-        :root { --neon: #00ff41; --bg: #000; --danger: #ff003c; --gold: #ffd700; --blue: #00d4ff; }
+        :root { --neon-green: #00ff41; --danger-red: #ff003c; --bg-black: #000; --panel-bg: rgba(10, 10, 10, 0.95); --electric-blue: #00d4ff; }
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
-        body { background: var(--bg); color: white; font-family: 'Fira Code', monospace; overflow-x: hidden; }
-        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
+        body { background: var(--bg-black); color: white; font-family: 'Fira Code', monospace; overflow-x: hidden; }
+        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.12; }
 
-        /* এন্ট্রি স্ক্রিন */
-        #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; border: 2px solid var(--neon); }
-        .auth-btn { padding: 20px 40px; border: 2px solid var(--neon); color: var(--neon); font-size: 1.5rem; background: transparent; font-family: 'Fira Code'; box-shadow: 0 0 20px var(--neon); animation: pulse 1s infinite; cursor: pointer; }
+        /* সিস্টেম অথেন্টিকেশন স্ক্রিন */
+        #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; text-align: center; border: 3px solid var(--neon-green); box-sizing: border-box; }
+        .auth-btn { padding: 25px 50px; border: 2px solid var(--neon-green); color: var(--neon-green); font-size: 1.8rem; background: transparent; font-family: 'Fira Code'; box-shadow: 0 0 30px var(--neon-green); animation: pulse 1s infinite; cursor: pointer; text-transform: uppercase; letter-spacing: 5px; }
 
-        header { padding: 30px; text-align: center; border-bottom: 2px solid var(--neon); background: rgba(0,0,0,0.9); box-shadow: 0 0 30px var(--neon); }
-        .glitch-title { font-size: 2.5rem; color: var(--neon); text-shadow: 2px 2px var(--danger); animation: flicker 2s infinite; }
+        header { padding: 30px; text-align: center; border-bottom: 2px solid var(--neon-green); background: rgba(0,0,0,0.9); box-shadow: 0 0 30px var(--neon-green); z-index: 100; position: relative; }
+        .glitch-title { font-size: 3rem; color: var(--neon-green); text-shadow: 3px 3px var(--danger-red); animation: flicker 3s infinite; }
+        .status-bar { background: var(--danger-red); color: white; padding: 5px; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; }
 
-        main { padding: 20px; max-width: 1400px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        main { padding: 25px; max-width: 1600px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; position: relative; z-index: 10; }
         
-        .panel { background: rgba(10, 10, 10, 0.95); border: 1px solid #333; padding: 25px; border-radius: 12px; transition: 0.4s; position: relative; overflow: hidden; }
-        .panel:hover { border-color: var(--neon); box-shadow: 0 0 20px rgba(0,255,65,0.2); transform: translateY(-5px); }
-        .panel h2 { color: var(--neon); font-size: 1.2rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .panel { background: var(--panel-bg); border: 1px solid #222; padding: 25px; border-radius: 15px; transition: 0.4s; position: relative; overflow: hidden; }
+        .panel:hover { border-color: var(--neon-green); box-shadow: 0 0 25px rgba(0,255,65,0.2); transform: translateY(-5px); }
+        .panel h2 { color: var(--neon-green); font-size: 1.3rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #222; padding-bottom: 10px; display: flex; align-items: center; }
+        .panel h2::before { content: '>'; margin-right: 10px; animation: blink 1s infinite; }
 
-        /* সাবস্ক্রিপশন টেবিল */
-        .sub-container { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .card { background: #0a0a0a; border: 1px solid #222; padding: 30px; border-radius: 15px; text-align: center; position: relative; }
-        .card.pro { border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
-        .card h3 { font-size: 1.5rem; margin-bottom: 15px; color: var(--blue); }
-        .card.pro h3 { color: var(--gold); }
-        .price { font-size: 2rem; font-weight: bold; margin: 15px 0; color: #fff; }
-        .btn-sub { width: 100%; padding: 12px; background: var(--neon); color: #000; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 20px; }
-        .btn-sub:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+        /* বিপজ্জনক সিস্টেম: Ransomware Simulator */
+        .ransom-box { border: 2px solid var(--danger-red); padding: 15px; background: rgba(255, 0, 60, 0.1); border-radius: 8px; text-align: center; }
+        .ransom-text { color: var(--danger-red); font-weight: bold; font-size: 1.1rem; animation: textPulse 1s infinite; }
+        .timer { font-size: 2rem; color: #fff; margin: 10px 0; font-weight: bold; }
 
-        /* রাডার */
-        .radar-box { width: 150px; height: 150px; border: 2px solid var(--neon); border-radius: 50%; margin: 20px auto; position: relative; overflow: hidden; }
-        .radar-line { position: absolute; top: 50%; left: 50%; width: 50%; height: 2px; background: var(--neon); transform-origin: left; animation: rotate 3s linear infinite; }
-        
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* প্রগ্রেস বার */
+        .progress-bar-container { width: 100%; background: #222; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 15px; }
+        .progress-bar-fill { height: 100%; background: var(--neon-green); width: 0%; transition: width 0.1s; }
+
+        /* পোর্ট স্ক্যানার অ্যানিমেশন */
+        .scanner-circle { width: 120px; height: 120px; border: 2px solid var(--electric-blue); border-radius: 50%; margin: 20px auto; position: relative; }
+        .scanner-line { position: absolute; top: 50%; left: 50%; width: 50%; height: 2px; background: var(--electric-blue); transform-origin: left; animation: rotate 2s linear infinite; }
+
+        /* লিডারবোর্ড */
+        .leaderboard-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 0.9rem; }
+        .rank { color: var(--neon-green); font-weight: bold; }
+
+        /* হিডেন অ্যাডমিন বাটন */
+        #hidden-admin { position: fixed; bottom: 10px; right: 10px; width: 10px; height: 10px; background: transparent; cursor: pointer; z-index: 1000; }
+        #hidden-admin:hover { background: rgba(255,255,255,0.1); }
+
+        footer { text-align: center; padding: 40px; border-top: 1px solid #222; margin-top: 50px; background: rgba(0,0,0,0.9); position: relative; z-index: 10; }
+
+        /* অ্যানিমেশনসমূহ */
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } 80% { opacity: 0.9; } }
+        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes textPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        
+        @media (max-width: 768px) { .glitch-title { font-size: 2.2rem; } main { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <div id="auth-overlay" onclick="bootSystem()">
-        <button class="auth-btn">[ INITIALIZE RK-SHIELD ]</button>
+    <div id="auth-overlay" onclick="bootApexSystem()">
+        <button class="auth-btn">[ INITIALIZE APEX PREDATOR ]</button>
     </div>
 
     <canvas id="matrix"></canvas>
 
+    <div class="status-bar">
+        <marquee>⚠️ SYSTEM: APEX PREDATOR V12.0 ACTIVE | 🌐 MONITORING TRAFFIC ON kumedofficial.online | 🔴 ENCRYPTION: SECURE | 📡 RECONNAISSANCE NODES: ONLINE</marquee>
+    </div>
+
     <header>
-        <h1 class="glitch-title">RK-SHIELD ULTIMATE</h1>
-        <p style="font-size: 0.8rem; margin-top: 10px; color: #aaa;">CORE ENGINE v11.0 | SECURE NODES ACTIVE</p>
+        <h1 class="glitch-title">RK-SHIELD APEX</h1>
+        <p style="font-size: 0.9rem; margin-top: 10px; color: #aaa;">DOMINATION THROUGH INTELLIGENCE</p>
     </header>
 
     <main>
-        <section class="panel">
-            <h2>Live Intelligence</h2>
-            <p style="margin-bottom: 10px;">IP: <span id="ip" style="color:var(--neon)">Scanning...</span></p>
-            <p style="margin-bottom: 10px;">LOC: <span id="loc">Wait...</span></p>
-            <p>ISP: <span id="isp">Wait...</span></p>
-            <div class="radar-box"><div class="radar-line"></div></div>
+l        <section class="panel">
+            <h2>Dominance Control</h2>
+            <div class="ransom-box">
+                <p class="ransom-text">Target Encryption in Progress</p>
+                <div class="timer" id="countdown">05:00:00</div>
+                <p style="font-size: 0.7rem; color: #aaa;">[ STATUS: DEPLOYING PAYLOAD ]</p>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" id="ransom-progress"></div></div>
         </section>
 
         <section class="panel">
-            <h2>System Logs</h2>
-            <div id="logs" style="font-size: 0.8rem; height: 220px; overflow-y: hidden; color: #00ff00;"></div>
+            <h2>Core Execution Logs</h2>
+            <div id="logs" style="font-size: 0.8rem; height: 230px; overflow-y: hidden; color: #00ff00; background: black; padding: 10px; border-radius: 8px;"></div>
         </section>
 
-        <div class="sub-container">
-            <div class="card">
-                <h3>BASIC SHIELD</h3>
-                <div class="price">৳ 500<span style="font-size: 0.8rem;">/mo</span></div>
-                <p>• Web Reconnaissance<br>• Vulnerability Scan</p>
-                <button class="btn-sub" onclick="alert('Contact RK for Basic Access')">SELECT PLAN</button>
+        <section class="panel">
+            <h2>Network Recon</h2>
+            <div class="info-row" style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="color:var(--neon-green)">Target IP:</span> <span id="ip">Scanning...</span></div>
+            <div class="scanner-circle"><div class="scanner-line"></div></div>
+            <p style="text-align:center; font-size:0.8rem; color:var(--electric-blue);">Scanning Open Ports...</p>
+        </section>
+
+        <section class="panel">
+            <h2>Apex Predator Rankings</h2>
+            <div id="leaderboard">
+                <div class="leaderboard-row"><span class="rank">#1</span><span>RK_Shield</span><span style="color:var(--neon-green);">10.5M pts</span></div>
+                <div class="leaderboard-row"><span class="rank" style="color:#aaa">#2</span><span>Silent_Ghost</span><span style="color:#aaa">8.2M pts</span></div>
+                <div class="leaderboard-row"><span class="rank" style="color:#aaa">#3</span><span>Shadow_Walker</span><span style="color:#aaa">5.1M pts</span></div>
             </div>
-            <div class="card pro">
-                <h3>ULTRA ELITE</h3>
-                <div class="price">৳ 1500<span style="font-size: 0.8rem;">/mo</span></div>
-                <p>• Dark Web Monitoring<br>• 24/7 Threat Hunting</p>
-                <button class="btn-sub" style="background:var(--gold)" onclick="alert('Contact RK for Elite Access')">UPGRADE NOW</button>
-            </div>
-            <div class="card">
-                <h3>BUSINESS PRO</h3>
-                <div class="price">৳ 5000<span style="font-size: 0.8rem;">/mo</span></div>
-                <p>• Full Infrastructure Audit<br>• Incident Response</p>
-                <button class="btn-sub" onclick="alert('Contact RK for Enterprise')">CONTACT SALES</button>
-            </div>
-        </div>
+        </section>
     </main>
 
-    <footer style="text-align: center; padding: 40px; border-top: 1px solid #222; margin-top: 50px;">
-        <p>© 2026 kumedofficial.online | RK-SHIELD GLOBAL SECURITY</p>
+    <div id="hidden-admin" onclick="alert('ADMIN ACCESS REQUIRED!')"></div>
+
+    <footer onclick="playWarning()">
+        <p>© 2026 kumedofficial.online | RK-SHIELD GLOBAL DOMINATION</p>
+        <p style="font-size: 0.7rem; color: var(--danger-red); margin-top: 10px; animation: flicker 1s infinite;">[ SECURE ACCESS GRANTED ]</p>
     </footer>
 
     <script>
         // আইপি ডাটা
         fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
             document.getElementById('ip').innerText = data.ip;
-            document.getElementById('loc').innerText = data.city + ", " + data.country_name;
-            document.getElementById('isp').innerText = data.org;
         });
 
         // ম্যাট্রিক্স রেইন
@@ -120,24 +138,45 @@
         setInterval(draw, 50);
 
         // সিস্টেম বুট ও ভয়েস
-        function bootSystem() {
+        function bootApexSystem() {
             document.getElementById('auth-overlay').style.display = 'none';
-            const msg = new SpeechSynthesisUtterance("Welcome RK. God Mode Initialized. All systems are under your control on kumed official dot online.");
-            msg.rate = 0.9; msg.pitch = 0.8;
+            
+            // মেইন ভয়েস
+            const msg = new SpeechSynthesisUtterance("Welcome RK. Apex Predator mode is initialized. All global nodes are under your command on kumed official dot online. Prepare for domination.");
+            msg.rate = 0.85; msg.pitch = 0.7;
             window.speechSynthesis.speak(msg);
+            
             startLogs();
+            startRansomSim();
         }
 
         // লগস এনিমেশন
         function startLogs() {
             const logsBox = document.getElementById('logs');
-            const phrases = ["> Bypassing Firewall...", "> Accessing Database...", "> Encryption: AES-256 Active", "> Packet Sniffing started...", "> RK-ULTRA v5.0 Loaded.", "> Target Acquired.", "> Status: UNSTOPPABLE"];
+            const phrases = ["> Bypass Firewall [SUCCESS]", "> Root Access: GRANTED", "> Encrypting Target Database...", "> Injecting Apex Payload...", "> Sat Link established.", "> RK-ULTRA V5.0 DEPLOYED.", "> Standing by for command..."];
             setInterval(() => {
                 let p = document.createElement('p');
-                p.innerText = phrases[Math.floor(Math.random()*phrases.length)];
+                p.innerText = "> " + phrases[Math.floor(Math.random()*phrases.length)];
                 logsBox.appendChild(p);
-                if(logsBox.children.length > 10) logsBox.removeChild(logsBox.firstChild);
-            }, 1200);
+                if(logsBox.children.length > 12) logsBox.removeChild(logsBox.firstChild);
+            }, 1000);
+        }
+
+        // Ransomware সিমুলেশন
+        function startRansomSim() {
+            let prog = 0;
+            const bar = document.getElementById('ransom-progress');
+            setInterval(() => {
+                if(prog < 100) { prog += 0.5; bar.style.width = prog + '%'; }
+                else { prog = 0; }
+            }, 100);
+        }
+
+        // ফুটার ক্লিক করলে ওয়ার্নিং ভয়েস
+        function playWarning() {
+            const msg = new SpeechSynthesisUtterance("Warning. Unauthorized access will be traced and destroyed.");
+            msg.rate = 1; msg.pitch = 0.5;
+            window.speechSynthesis.speak(msg);
         }
     </script>
 </body>
