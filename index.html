@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RK-SHIELD | Advanced OSINT Engine</title>
+    <style>
+        body { background-color: #050505; color: #00ff41; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        .box { border: 2px solid #00ff41; padding: 40px; text-align: center; box-shadow: 0 0 15px #00ff41; background: rgba(0, 255, 65, 0.05); }
+        h1 { font-size: 2.5rem; letter-spacing: 8px; margin: 0; text-shadow: 2px 2px #000; }
+        p { color: #888; margin: 10px 0 30px; }
+        input { background: transparent; border: 1px solid #00ff41; color: #00ff41; padding: 12px; width: 280px; outline: none; text-align: center; }
+        button { background: #00ff41; color: #000; border: none; padding: 12px 25px; cursor: pointer; font-weight: bold; margin-left: 10px; transition: 0.3s; }
+        button:hover { background: #fff; color: #000; }
+        .status { margin-top: 25px; font-size: 0.7rem; color: #008f11; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>RK-SHIELD</h1>
+        <p>DEEP OSINT & BREACH ANALYSIS ENGINE</p>
+        <input type="text" placeholder="ENTER EMAIL OR DOMAIN...">
+        <button onclick="scan()">RUN SCAN</button>
+        <div class="status" id="st">SYSTEM STATUS: ONLINE | ENCRYPTED</div>
+    </div>
+    <script>
+        function scan() {
+            let s = document.getElementById('st');
+            s.innerText = "SEARCHING DARK WEB DATABASES...";
+            s.style.color = "yellow";
+            setTimeout(() => { 
+                alert("RK-SHIELD: Target Analysis Initiated! (Demo Mode)"); 
+                s.innerText = "SYSTEM STATUS: ONLINE";
+                s.style.color = "#008f11";
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
